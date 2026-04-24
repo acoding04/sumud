@@ -2,10 +2,13 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { CURRENCY } from "@/lib/constants";
 
-// Initialize Stripe with the secret key from environment variables
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-	apiVersion: "2023-10-16" as any, // adjust according to the Stripe SDK version
-});
+// Initialize Stripe with the secret key from environment variables (fallback for build step)
+const stripe = new Stripe(
+	process.env.STRIPE_SECRET_KEY || "sk_test_dummy",
+	{
+		apiVersion: "2023-10-16" as any, // adjust according to the Stripe SDK version
+	}
+);
 
 export async function POST(req: Request) {
 	try {
