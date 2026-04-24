@@ -1,7 +1,7 @@
 import "@/app/globals.css";
 
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Montserrat, Playfair_Display } from "next/font/google";
 import { Suspense } from "react";
 import { CartProvider } from "@/app/cart/cart-context";
 import { CartSidebar } from "@/app/cart/cart-sidebar";
@@ -9,25 +9,25 @@ import { CartButton } from "@/app/cart-button";
 import { Footer } from "@/app/footer";
 import { Navbar } from "@/app/navbar";
 import { SearchInput } from "@/app/search-input";
+import { AppLink } from "@/components/app-link";
 import { ErrorOverlayRemover, NavigationReporter } from "@/components/devtools";
-import { YnsLink } from "@/components/yns-link";
 import { commerce, getStoreFaviconUrl, meGetCached } from "@/lib/commerce";
 import { getCartCookieJson } from "@/lib/cookies";
 import { StoreJsonLd } from "@/lib/json-ld";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
+const montserrat = Montserrat({
+	variable: "--font-montserrat",
 	subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
+const playfair = Playfair_Display({
+	variable: "--font-playfair",
 	subsets: ["latin"],
 });
 
 export async function generateMetadata(): Promise<Metadata> {
 	const me = await meGetCached();
-	const storeName = me.store.settings?.storeName || "Your Next Store";
+	const storeName = me.store.settings?.storeName || "Sumud Scents";
 	const faviconUrl = getStoreFaviconUrl(me.store.settings) ?? "/logo.svg";
 
 	return {
@@ -66,16 +66,20 @@ async function CartProviderWrapper({ children }: { children: React.ReactNode }) 
 	return (
 		<CartProvider initialCart={cart} initialCartId={cartId}>
 			<div className="flex min-h-screen flex-col">
-				<header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
+				<header className="sticky top-0 z-50 border-b border-neutral-800 bg-[#111111]/90 text-white backdrop-blur-md transition-colors">
 					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 						<div className="flex items-center justify-between h-16">
 							<div className="flex items-center gap-8">
-								<YnsLink prefetch={"eager"} href="/" className="text-xl font-bold">
-									Your Next Store
-								</YnsLink>
+								<AppLink
+									prefetch={"eager"}
+									href="/"
+									className="text-xl font-serif text-[#d2ab5a] tracking-widest"
+								>
+									SUMUD SCENTS
+								</AppLink>
 								<Navbar />
 							</div>
-							<div className="flex items-center gap-2">
+							<div className="flex items-center gap-2 text-white">
 								<Suspense>
 									<SearchInput />
 								</Suspense>
@@ -101,7 +105,9 @@ export default function RootLayout({
 
 	return (
 		<html lang="en">
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+			<body
+				className={`${montserrat.variable} ${playfair.variable} font-sans antialiased bg-[#FAF9F6] text-neutral-900`}
+			>
 				<Suspense>
 					<StoreJsonLd />
 				</Suspense>

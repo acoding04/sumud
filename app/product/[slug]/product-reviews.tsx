@@ -19,8 +19,8 @@ function StarRating({ rating, size = "sm" }: { rating: number; size?: "sm" | "lg
 	);
 }
 
-function ReviewSummary({ summary }: { summary: APIProductReviewsBrowseResult["summary"] }) {
-	if (summary.reviewCount === 0) return null;
+function ReviewSummary({ summary }: { summary?: APIProductReviewsBrowseResult["summary"] }) {
+	if (!summary?.reviewCount || summary.reviewCount === 0) return null;
 
 	return (
 		<div className="flex items-center gap-3">
@@ -55,13 +55,14 @@ function ReviewCard({ review }: { review: APIProductReviewsBrowseResult["data"][
 }
 
 export function ProductReviews({ reviews, slug }: { reviews: APIProductReviewsBrowseResult; slug: string }) {
+	if (!reviews) return null;
 	return (
 		<section className="mt-20 border-t border-border pt-16">
 			<div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<h2 className="text-3xl font-medium tracking-tight">Customer Reviews</h2>
 				<ReviewSummary summary={reviews.summary} />
 			</div>
-			{reviews.data.length > 0 ? (
+			{reviews.data?.length > 0 ? (
 				<div className="space-y-6">
 					{reviews.data.map((review) => (
 						<ReviewCard key={review.id} review={review} />

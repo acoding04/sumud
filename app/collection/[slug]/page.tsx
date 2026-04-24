@@ -4,22 +4,22 @@ import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { ProductGrid } from "@/components/sections/product-grid";
+import { AppMedia } from "@/lib/app-media";
 import { commerce } from "@/lib/commerce";
 import { buildCollectionBreadcrumbJsonLd, buildCollectionJsonLd, JsonLdScript } from "@/lib/json-ld";
-import { YNSMedia } from "@/lib/yns-media";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
 	const { slug } = await params;
 	const collection = await commerce.collectionGet({ idOrSlug: slug });
 
 	if (!collection) {
-		return { title: "Collection Not Found — Your Next Store" };
+		return { title: "Collection Not Found — Sumud Scents" };
 	}
 
 	const description = typeof collection.description === "string" ? collection.description : undefined;
 
 	return {
-		title: `${collection.name} — Your Next Store`,
+		title: `${collection.name} — Sumud Scents`,
 		description,
 		openGraph: {
 			title: collection.name,
@@ -50,7 +50,7 @@ function CollectionHeader({ collection }: { collection: APICollectionGetByIdResu
 			</div>
 			{collection.image && (
 				<div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block">
-					<YNSMedia
+					<AppMedia
 						src={collection.image}
 						alt={collection.name}
 						fill

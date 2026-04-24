@@ -4,8 +4,8 @@ import { ChevronLeft, ChevronRight, ZoomIn } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { AppMedia } from "@/lib/app-media";
 import { cn, isVideoUrl } from "@/lib/utils";
-import { YNSMedia } from "@/lib/yns-media";
 
 type Variant = {
 	id: string;
@@ -42,8 +42,8 @@ export function MediaGallery({ images, productName, variants }: MediaGalleryProp
 	// Compute which images to display based on selected variant
 	const displayImages = useMemo(() => {
 		// Find selected variant based on URL params
-		const selectedVariant = variants.find((v) =>
-			v.combinations.every(
+		const selectedVariant = variants?.find((v) =>
+			v.combinations?.every(
 				(c) => searchParams.get(c.variantValue.variantType.label) === c.variantValue.value,
 			),
 		);
@@ -110,7 +110,7 @@ export function MediaGallery({ images, productName, variants }: MediaGalleryProp
 						controls
 					/>
 				) : (
-					<YNSMedia
+					<AppMedia
 						src={displayImages[selectedIndex]}
 						alt={`${productName} - View ${selectedIndex + 1}`}
 						fill
@@ -195,7 +195,7 @@ export function MediaGallery({ images, productName, variants }: MediaGalleryProp
 									playsInline
 								/>
 							) : (
-								<YNSMedia
+								<AppMedia
 									src={image}
 									alt={`${productName} thumbnail ${index + 1}`}
 									fill

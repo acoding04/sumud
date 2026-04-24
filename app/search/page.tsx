@@ -14,7 +14,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
 	const { q } = await searchParams;
 	return {
-		title: q ? `Search: ${q} — Your Next Store` : "Search — Your Next Store",
+		title: q ? `Search: ${q} — Sumud Scents` : "Search — Sumud Scents",
 		description: q ? `Search results for "${q}"` : "Search our store",
 	};
 }
@@ -71,7 +71,7 @@ async function SearchResults({ q, page }: { q?: string; page?: string }) {
 			</div>
 
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-				{result.data.map((product) => (
+				{result.data.map((product: any) => (
 					<ProductCard key={product.id} product={product} />
 				))}
 			</div>

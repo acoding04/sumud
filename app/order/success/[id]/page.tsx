@@ -1,13 +1,13 @@
 import { CheckCircle } from "lucide-react";
 import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
+import { AppLink } from "@/components/app-link";
 import { Button } from "@/components/ui/button";
-import { YnsLink } from "@/components/yns-link";
+import { AppMedia } from "@/lib/app-media";
 import { commerce } from "@/lib/commerce";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
 import { getProductThumbnail } from "@/lib/utils";
-import { YNSMedia } from "@/lib/yns-media";
 
 export default async function OrderSuccessPage(props: { params: Promise<{ id: string }> }) {
 	"use cache";
@@ -29,7 +29,7 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
 	const shipping = order.orderData.shipping;
 	const customer = order.orderData.customer;
 
-	const subtotal = lineItems.reduce((acc, item) => {
+	const subtotal = lineItems.reduce((acc: any, item: any) => {
 		return acc + BigInt(item.productVariant.price) * BigInt(item.quantity);
 	}, BigInt(0));
 
@@ -60,7 +60,7 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
 					<h2 className="font-medium">Order Items</h2>
 				</div>
 				<div className="divide-y divide-border">
-					{lineItems.map((item) => (
+					{lineItems.map((item: any) => (
 						<OrderItem key={item.id} item={item} />
 					))}
 				</div>
@@ -107,9 +107,9 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
 			{/* Continue Shopping Button */}
 			<div className="mt-8 text-center">
 				<Button asChild>
-					<YnsLink prefetch="eager" href="/">
+					<AppLink prefetch="eager" href="/">
 						Continue Shopping
-					</YnsLink>
+					</AppLink>
 				</Button>
 			</div>
 		</div>
@@ -143,24 +143,24 @@ function OrderItem({ item }: { item: OrderLineItem }) {
 	return (
 		<div className="flex gap-4 p-6">
 			{/* Product Image */}
-			<YnsLink
+			<AppLink
 				prefetch="eager"
 				href={`/product/${product.slug}`}
 				className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-secondary"
 			>
-				{image && <YNSMedia src={image} alt={product.name} fill className="object-cover" sizes="80px" />}
-			</YnsLink>
+				{image && <AppMedia src={image} alt={product.name} fill className="object-cover" sizes="80px" />}
+			</AppLink>
 
 			{/* Product Details */}
 			<div className="flex min-w-0 flex-1 flex-col justify-between">
 				<div>
-					<YnsLink
+					<AppLink
 						prefetch="eager"
 						href={`/product/${product.slug}`}
 						className="text-sm font-medium leading-tight text-foreground hover:underline line-clamp-2"
 					>
 						{product.name}
-					</YnsLink>
+					</AppLink>
 					<p className="text-sm text-muted-foreground mt-1">Qty: {quantity}</p>
 				</div>
 				<p className="text-sm font-semibold">

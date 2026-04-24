@@ -1,5 +1,5 @@
 import { cacheLife } from "next/cache";
-import { YnsLink } from "@/components/yns-link";
+import { AppLink } from "@/components/app-link";
 import { commerce } from "@/lib/commerce";
 
 async function FooterCollections() {
@@ -16,15 +16,15 @@ async function FooterCollections() {
 		<div>
 			<h3 className="text-sm font-semibold text-foreground">Collections</h3>
 			<ul className="mt-4 space-y-3">
-				{collections.data.map((collection) => (
+				{collections.data.map((collection: any) => (
 					<li key={collection.id}>
-						<YnsLink
+						<AppLink
 							prefetch={"eager"}
 							href={`/collection/${collection.slug}`}
 							className="text-sm text-muted-foreground hover:text-foreground transition-colors"
 						>
 							{collection.name}
-						</YnsLink>
+						</AppLink>
 					</li>
 				))}
 			</ul>
@@ -46,15 +46,15 @@ async function FooterLegalPages() {
 		<div>
 			<h3 className="text-sm font-semibold text-foreground">Legal</h3>
 			<ul className="mt-4 space-y-3">
-				{pages.data.map((page) => (
+				{pages.data.map((page: any) => (
 					<li key={page.id}>
-						<YnsLink
+						<AppLink
 							prefetch={"eager"}
 							href={`/legal${page.path}`}
 							className="text-sm text-muted-foreground hover:text-foreground transition-colors"
 						>
 							{page.title}
-						</YnsLink>
+						</AppLink>
 					</li>
 				))}
 			</ul>
@@ -69,9 +69,9 @@ export function Footer() {
 				<div className="py-12 sm:py-16 flex flex-col sm:flex-row gap-8 sm:gap-16">
 					{/* Brand */}
 					<div className="sm:max-w-xs">
-						<YnsLink prefetch={"eager"} href="/" className="text-xl font-bold text-foreground">
-							Your Next Store
-						</YnsLink>
+						<AppLink prefetch={"eager"} href="/" className="text-xl font-bold text-foreground">
+							Sumud Scents
+						</AppLink>
 						<p className="mt-4 text-sm text-muted-foreground leading-relaxed">
 							Curated essentials for modern living. Quality products, thoughtfully designed.
 						</p>
@@ -85,13 +85,13 @@ export function Footer() {
 						<h3 className="text-sm font-semibold text-foreground">Support</h3>
 						<ul className="mt-4 space-y-3">
 							<li>
-								<YnsLink
+								<AppLink
 									prefetch={"eager"}
 									href="/faq"
 									className="text-sm text-muted-foreground hover:text-foreground transition-colors"
 								>
 									FAQ
-								</YnsLink>
+								</AppLink>
 							</li>
 						</ul>
 					</div>
@@ -103,7 +103,7 @@ export function Footer() {
 				{/* Bottom bar */}
 				<div className="py-6 border-t border-border">
 					<p className="text-sm text-muted-foreground">
-						&copy; {new Date().getFullYear()} Your Next Store. All rights reserved.
+						&copy; {new Date().getFullYear()} Sumud Scents. All rights reserved.
 					</p>
 				</div>
 			</div>

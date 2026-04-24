@@ -1,11 +1,11 @@
 import { Mail } from "lucide-react";
 import type { Metadata } from "next";
 import { type FAQCategory, faqCategories } from "@/app/faq/faq-data";
+import { AppLink } from "@/components/app-link";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { YnsLink } from "@/components/yns-link";
 
 export const metadata: Metadata = {
-	title: "FAQ — Your Next Store",
+	title: "FAQ — Sumud Scents",
 	description: "Frequently asked questions about orders, payments, shipping, returns, and more.",
 };
 
@@ -63,13 +63,13 @@ export default function FAQPage() {
 		<div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
 			{/* Header */}
 			<div className="mb-10">
-				<YnsLink
+				<AppLink
 					prefetch="eager"
 					href="/"
 					className="text-sm text-muted-foreground hover:text-foreground transition-colors"
 				>
 					Home
-				</YnsLink>
+				</AppLink>
 				<span className="mx-2 text-muted-foreground">/</span>
 				<span className="text-sm">FAQ</span>
 				<h1 className="mt-4 text-4xl font-medium tracking-tight">Frequently Asked Questions</h1>

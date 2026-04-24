@@ -61,7 +61,7 @@ export function AddToCartButton({ variants, product, volumePricingTiers = [] }: 
 		});
 
 		return variants.find((variant) =>
-			variant.combinations.every(
+			variant.combinations?.every(
 				(combination) =>
 					paramsOptions[combination.variantValue.variantType.label] === combination.variantValue.value,
 			),

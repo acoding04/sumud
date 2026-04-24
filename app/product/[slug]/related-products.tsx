@@ -23,7 +23,7 @@ async function RelatedProductsContent({
 		...(categorySlug ? { category: categorySlug } : {}),
 	});
 
-	const related = result.data.filter((p) => p.id !== productId).slice(0, 6);
+	const related = result.data.filter((p: any) => p.id !== productId).slice(0, 6);
 
 	if (related.length === 0) return null;
 

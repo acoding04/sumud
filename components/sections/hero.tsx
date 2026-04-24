@@ -1,5 +1,5 @@
 import { ArrowRightIcon } from "lucide-react";
-import { YnsLink } from "../yns-link";
+import { AppLink } from "../app-link";
 
 export function Hero() {
 	return (
@@ -15,21 +15,21 @@ export function Hero() {
 							to last.
 						</p>
 						<div className="mt-10 flex flex-col sm:flex-row gap-4">
-							<YnsLink
+							<AppLink
 								prefetch={"eager"}
 								href="#products"
 								className="inline-flex items-center justify-center gap-2 h-12 px-8 bg-foreground text-primary-foreground rounded-full text-base font-medium hover:bg-foreground/90 transition-colors"
 							>
 								Shop Collection
 								<ArrowRightIcon className="h-4 w-4" />
-							</YnsLink>
-							<YnsLink
+							</AppLink>
+							<AppLink
 								prefetch={"eager"}
 								href="#about"
 								className="inline-flex items-center justify-center gap-2 h-12 px-8 border border-border rounded-full text-base font-medium hover:bg-secondary transition-colors"
 							>
 								Our Story
-							</YnsLink>
+							</AppLink>
 						</div>
 					</div>
 				</div>

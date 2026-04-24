@@ -1,10 +1,10 @@
 import type { APICollectionGetByIdResult, APIProductsBrowseResult } from "commerce-kit";
+import { AppMedia } from "@/lib/app-media";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
 import { isVideoUrl } from "@/lib/utils";
-import { YNSMedia } from "@/lib/yns-media";
+import { AppLink } from "./app-link";
 import { QuickAddButton } from "./quick-add-button";
-import { YnsLink } from "./yns-link";
 
 type BrowseProduct = APIProductsBrowseResult["data"][number];
 type CollectionProduct = APICollectionGetByIdResult["productCollections"][number]["product"];
@@ -44,7 +44,7 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 	const singleVariant = variants?.length === 1 ? variants[0] : null;
 
 	return (
-		<YnsLink prefetch={"eager"} href={`/product/${product.slug}`} className="group">
+		<AppLink prefetch={"eager"} href={`/product/${product.slug}`} className="group">
 			<div className="relative aspect-square bg-secondary rounded-2xl overflow-hidden mb-4">
 				{singleVariant && (
 					<QuickAddButton
@@ -70,7 +70,7 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 							playsInline
 						/>
 					) : (
-						<YNSMedia
+						<AppMedia
 							src={primaryImage}
 							alt={product.name}
 							fill
@@ -89,7 +89,7 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 							playsInline
 						/>
 					) : (
-						<YNSMedia
+						<AppMedia
 							src={secondaryImage}
 							alt={`${product.name} - alternate view`}
 							fill
@@ -102,6 +102,6 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 				<h3 className="text-base font-medium text-foreground">{product.name}</h3>
 				<p className="text-base font-semibold text-foreground">{priceDisplay}</p>
 			</div>
-		</YnsLink>
+		</AppLink>
 	);
 }

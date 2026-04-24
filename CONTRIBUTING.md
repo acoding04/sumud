@@ -1,4 +1,4 @@
-# Contributing to Your Next Store
+# Contributing to Sumud Scents
 
 ## Getting Started
 

@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">Your Next Store</h1>
+<h1 align="center">Sumud Scents</h1>
 
 <p align="center">
   <strong>Open-source AI-native Next.js e-commerce template.</strong>
@@ -15,7 +15,7 @@ Powered by Stripe. Built for AI coding tools.
 
 <div align="center">
   <a href="https://demo.yournextstore.com">
-    <img src="public/screenshot.png" alt="Your Next Store Demo" width="800" />
+    <img src="public/screenshot.png" alt="Sumud Scents Demo" width="800" />
   </a>
   <p><strong>Live Demo:</strong> <a href="https://demo.yournextstore.com">demo.yournextstore.com</a></p>
 </div>
@@ -88,7 +88,7 @@ Refer to the [API documentation](https://yns.store/manage/settings/api) for deta
 
 ## Themes
 
-Your Next Store ships with **30+ ready-made themes** across different store categories. Each theme includes a fully redesigned homepage, hero, color palette, and section layout — all built on the same core codebase.
+Sumud Scents ships with **30+ ready-made themes** across different store categories. Each theme includes a fully redesigned homepage, hero, color palette, and section layout — all built on the same core codebase.
 
 Switch themes with a single command:
 

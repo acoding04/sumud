@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
+import { AppLink } from "@/components/app-link";
 import { ProductCard } from "@/components/product-card";
-import { YnsLink } from "@/components/yns-link";
 import { commerce } from "@/lib/commerce";
 import { ProductsPagination } from "./products-pagination";
 
@@ -15,7 +15,7 @@ const sortOptions = [
 ] as const;
 
 export const metadata: Metadata = {
-	title: "All Products — Your Next Store",
+	title: "All Products — Sumud Scents",
 	description: "Browse our complete product collection.",
 };
 
@@ -48,7 +48,7 @@ async function ProductList({ page, sort }: { page?: string; sort?: string }) {
 	return (
 		<>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-				{result.data.map((product) => (
+				{result.data.map((product: any) => (
 					<ProductCard key={product.id} product={product} />
 				))}
 			</div>
@@ -63,13 +63,13 @@ function SortLink({ option, currentSort }: { option: (typeof sortOptions)[number
 	const href = option.value === "newest" ? "/products" : `/products?sort=${option.value}`;
 
 	return (
-		<YnsLink
+		<AppLink
 			prefetch="eager"
 			href={href}
 			className={`text-sm transition-colors ${isActive ? "font-medium text-foreground" : "text-muted-foreground hover:text-foreground"}`}
 		>
 			{option.label}
-		</YnsLink>
+		</AppLink>
 	);
 }
 

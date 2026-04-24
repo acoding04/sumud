@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Your Next Store — e-commerce app built with Next.js App Router + Commerce Kit SDK.
+Sumud Scents — e-commerce app built with Next.js App Router + Commerce Kit SDK.
 
 ## Commands
 

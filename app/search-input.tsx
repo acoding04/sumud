@@ -3,7 +3,7 @@
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useRef } from "react";
-import { YnsLink } from "@/components/yns-link";
+import { AppLink } from "@/components/app-link";
 
 export function SearchInput() {
 	const router = useRouter();
@@ -34,13 +34,13 @@ export function SearchInput() {
 					/>
 				</div>
 			</form>
-			<YnsLink
+			<AppLink
 				href="/search"
 				className="p-2 hover:bg-secondary rounded-full transition-colors sm:hidden"
 				aria-label="Search"
 			>
 				<Search className="w-6 h-6" />
-			</YnsLink>
+			</AppLink>
 		</>
 	);
 }

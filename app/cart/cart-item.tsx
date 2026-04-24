@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { removeFromCart, setCartQuantity } from "@/app/cart/actions";
 import { type CartLineItem, getLineItemUnitPrice, useCart } from "@/app/cart/cart-context";
-import { YnsLink } from "@/components/yns-link";
+import { AppLink } from "@/components/app-link";
+import { AppMedia } from "@/lib/app-media";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
 import { cn, getProductThumbnail } from "@/lib/utils";
-import { YNSMedia } from "@/lib/yns-media";
 
 type CartItemProps = {
 	item: CartLineItem;
@@ -58,26 +58,26 @@ export function CartItem({ item }: CartItemProps) {
 	return (
 		<div className="flex gap-3 py-4">
 			{/* Product Image */}
-			<YnsLink
+			<AppLink
 				prefetch={"eager"}
 				href={`/product/${product.slug}`}
 				onClick={closeCart}
 				className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg bg-secondary"
 			>
-				{image && <YNSMedia src={image} alt={product.name} fill className="object-cover" sizes="96px" />}
-			</YnsLink>
+				{image && <AppMedia src={image} alt={product.name} fill className="object-cover" sizes="96px" />}
+			</AppLink>
 
 			{/* Product Details */}
 			<div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
 				<div className="flex items-start justify-between gap-2">
-					<YnsLink
+					<AppLink
 						prefetch={"eager"}
 						href={`/product/${product.slug}`}
 						onClick={closeCart}
 						className="text-sm font-medium leading-tight text-foreground hover:underline line-clamp-2"
 					>
 						{product.name}
-					</YnsLink>
+					</AppLink>
 					<button
 						type="button"
 						onClick={handleRemove}

@@ -1,5 +1,5 @@
 // We are replacing the YNS API with a completely local mock dataset so you don't
-// have to pay or rely on Your Next Store for your backend.
+// have to pay or rely on Sumud Scents for your backend.
 
 const PRODUCTS = [
 	{
