@@ -105,12 +105,12 @@ const ProductDetails = async ({ params }: { params: Promise<{ slug: string }> })
 							)}
 						</div>
 
-						<p className="text-lg lg:text-xl text-zinc-600 font-light leading-relaxed mb-12">
+						<p className="text-lg lg:text-xl text-zinc-600 font-light leading-[1.65] mb-12">
 							{perfumeData?.scentProfile || product.summary}
 						</p>
 
 						{/* Add to Cart within the Right Hero Column to keep it easily accessible alongside Title! */}
-						<div className="bg-white border border-zinc-200 p-6 lg:p-8 rounded-2xl shadow-sm text-zinc-900">
+						<div className="bg-white border border-zinc-200 p-6 lg:p-8 rounded-2xl shadow-sm text-zinc-900 animate-fade-up transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
 							<AddToCartButton
 								variants={product.variants}
 								product={{

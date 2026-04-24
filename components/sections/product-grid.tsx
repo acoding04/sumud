@@ -30,11 +30,11 @@ export async function ProductGrid({
 	const displayProducts = products ?? (await commerce.productBrowse({ active: true, limit })).data;
 
 	return (
-		<section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+		<section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-32 animate-fade-up">
 			<div className="flex items-end justify-between mb-12">
 				<div>
-					<h2 className="text-2xl sm:text-3xl font-medium text-foreground">{title}</h2>
-					<p className="mt-2 text-muted-foreground">{description}</p>
+					<h2 className="text-2xl sm:text-3xl font-medium tracking-tight text-foreground">{title}</h2>
+					<p className="mt-3 text-lg text-muted-foreground">{description}</p>
 				</div>
 				{showViewAll && (
 					<AppLink

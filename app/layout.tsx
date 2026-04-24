@@ -66,7 +66,7 @@ async function CartProviderWrapper({ children }: { children: React.ReactNode }) 
 	return (
 		<CartProvider initialCart={cart} initialCartId={cartId}>
 			<div className="flex min-h-screen flex-col">
-				<header className="sticky top-0 z-50 border-b border-neutral-800 bg-[#111111]/90 text-white backdrop-blur-md transition-colors">
+				<header className="sticky top-0 z-50 border-b border-neutral-800 bg-[#111111]/90 text-white backdrop-blur-xl transition-all duration-300">
 					<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 						<div className="flex items-center justify-between h-16">
 							<div className="flex items-center gap-8">

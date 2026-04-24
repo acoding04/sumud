@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { StripeCheckoutButton } from "@/components/stripe-checkout-button";
+import Image from "next/image";
 
 const FEATURED_SCENTS = [
 	{
@@ -33,8 +34,8 @@ export default function Home() {
 		<main className="min-h-screen selection:bg-neutral-800 selection:text-white">
 			{/* HERO SECTION (DARK MODE) */}
 			<section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-neutral-800/50 px-4 pt-16 sm:px-6 lg:px-8 bg-[#111111] text-neutral-200">
-				<div className="absolute inset-0 z-0 opacity-40">
-					<div className="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-neutral-900 via-neutral-950 to-neutral-900 blur-3xl mix-blend-screen" />
+				<div className="absolute inset-0 z-0 pointer-events-none">
+					<div className="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neutral-800 via-[#111111] to-[#111111] opacity-40 transform-gpu" />
 				</div>
 
 				<div className="relative z-10 flex max-w-4xl flex-col items-center text-center">
@@ -84,9 +85,12 @@ export default function Home() {
 								<div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-100 flex flex-col items-center justify-center">
 									<div className="absolute inset-0 bg-neutral-900/5 opacity-0 transition-opacity duration-500 z-10 group-hover:opacity-100" />
 									<div className="h-full w-full relative z-0">
-										<img
+										<Image
 											src={scent.image}
 											alt={scent.name}
+											fill
+											priority
+											sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
 											className="object-cover h-full w-full transition-transform duration-700 ease-out group-hover:scale-105"
 										/>
 									</div>
@@ -125,19 +129,6 @@ export default function Home() {
 					</div>
 				</div>
 			</section>
-
-			{/* FOOTER PREVIEW / BRAND REINFORCEMENT */}
-			<footer className="border-t border-neutral-900 bg-black py-20 text-center">
-				<h2
-					className="font-serif text-2xl font-light tracking-[0.2em] text-neutral-600 mb-6"
-					style={{ fontFamily: "Playfair Display, serif" }}
-				>
-					SUMUD
-				</h2>
-				<p className="text-xs tracking-wider text-neutral-500">
-					&copy; 2026 SUMUD SCENTS. ALL RIGHTS RESERVED.
-				</p>
-			</footer>
 		</main>
 	);
 }

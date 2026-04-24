@@ -44,25 +44,27 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 	const singleVariant = variants?.length === 1 ? variants[0] : null;
 
 	return (
-		<AppLink prefetch={"eager"} href={`/product/${product.slug}`} className="group">
-			<div className="relative aspect-square bg-secondary rounded-2xl overflow-hidden mb-4">
+		<AppLink prefetch={"eager"} href={`/product/${product.slug}`} className="group block transition-all duration-500 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)] rounded-2xl pb-4">
+			<div className="relative aspect-square bg-secondary rounded-2xl overflow-hidden mb-6">
 				{singleVariant && (
-					<QuickAddButton
-						variantId={singleVariant.id}
-						variantPrice={singleVariant.price}
-						variantImages={singleVariant.images}
-						product={{
-							id: product.id,
-							name: product.name,
-							slug: product.slug,
-							images: product.images ?? [],
-						}}
-					/>
+					<div className="absolute inset-x-0 bottom-4 z-10 mx-auto w-[85%] opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+						<QuickAddButton
+							variantId={singleVariant.id}
+							variantPrice={singleVariant.price}
+							variantImages={singleVariant.images}
+							product={{
+								id: product.id,
+								name: product.name,
+								slug: product.slug,
+								images: product.images ?? [],
+							}}
+						/>
+					</div>
 				)}
 				{primaryImage &&
 					(isVideoUrl(primaryImage) ? (
 						<video
-							className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${secondaryImage ? "group-hover:opacity-0" : ""}`}
+							className={`absolute inset-0 w-full h-full object-cover transform transition-all duration-700 group-hover:scale-105 ${secondaryImage ? "group-hover:opacity-0" : ""}`}
 							src={primaryImage}
 							muted
 							loop
@@ -75,13 +77,13 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 							alt={product.name}
 							fill
 							sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-							className={`object-cover transition-opacity duration-500 ${secondaryImage ? "group-hover:opacity-0" : ""}`}
+							className={`object-cover transform transition-all duration-700 group-hover:scale-105 ${secondaryImage ? "group-hover:opacity-0" : ""}`}
 						/>
 					))}
 				{secondaryImage &&
 					(isVideoUrl(secondaryImage) ? (
 						<video
-							className="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+							className="absolute inset-0 w-full h-full object-cover transform transition-all duration-700 scale-100 opacity-0 group-hover:scale-105 group-hover:opacity-100"
 							src={secondaryImage}
 							muted
 							loop
@@ -94,13 +96,13 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 							alt={`${product.name} - alternate view`}
 							fill
 							sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-							className="object-cover opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+							className="object-cover transform transition-all duration-700 scale-100 opacity-0 group-hover:scale-105 group-hover:opacity-100"
 						/>
 					))}
 			</div>
-			<div className="space-y-1">
-				<h3 className="text-base font-medium text-foreground">{product.name}</h3>
-				<p className="text-base font-semibold text-foreground">{priceDisplay}</p>
+			<div className="space-y-1.5 px-2">
+				<h3 className="text-[1.05rem] font-medium tracking-tight text-foreground leading-snug">{product.name}</h3>
+				<p className="text-base font-semibold text-muted-foreground">{priceDisplay}</p>
 			</div>
 		</AppLink>
 	);
