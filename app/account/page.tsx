@@ -10,6 +10,20 @@ import { commerce } from "@/lib/commerce";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
 
+type AccountOrder = {
+	id: string;
+	lookup: string;
+	status: string;
+	createdAt: string;
+	orderData: {
+		lineItems: {
+			quantity: number;
+			productVariant: { price: string; images: string[]; product: { name: string; images: string[] } };
+		}[];
+		shipping: { price: string };
+	};
+};
+
 export const metadata: Metadata = {
 	title: "My Account — Sumud Scents",
 };
@@ -82,7 +96,7 @@ export default async function AccountPage() {
 						</AppLink>
 					</div>
 					<div className="space-y-4">
-						{recentOrders.slice(0, 3).map((order) => (
+						{recentOrders.slice(0, 3).map((order: AccountOrder) => (
 							<OrderCard key={order.id} order={order} />
 						))}
 					</div>

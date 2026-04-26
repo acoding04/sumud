@@ -17,6 +17,26 @@ import { commerce } from "@/lib/commerce";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
 
+type OrderData = {
+	id: string;
+	lookup: string;
+	status: string;
+	createdAt: string;
+	orderData: {
+		lineItems: {
+			id: string;
+			quantity: number;
+			productVariant: {
+				price: string;
+				images: string[];
+				product: { name: string; slug: string; images: string[] };
+			};
+		}[];
+		shipping: { name: string; price: string };
+		shippingAddress: { name: string; line1: string; city: string; postalCode: string; country: string };
+	};
+};
+
 export const metadata: Metadata = {
 	title: "Order History — Sumud Scents",
 };
@@ -64,7 +84,7 @@ export default async function OrdersPage() {
 				</div>
 			) : (
 				<div className="space-y-6">
-					{allOrders.map((order) => (
+					{allOrders.map((order: OrderData) => (
 						<OrderDetailCard key={order.id} order={order} />
 					))}
 				</div>
