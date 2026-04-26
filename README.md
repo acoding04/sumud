@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">Sumud Scents</h1>
+<h1 align="center">Sumud Scentss</h1>
 
 <p align="center">
   <strong>Open-source AI-native Next.js e-commerce template.</strong>
