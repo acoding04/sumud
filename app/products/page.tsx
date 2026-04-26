@@ -1,4 +1,3 @@
-import type { APIProductsBrowseResult } from "commerce-kit";
 import type { Metadata } from "next";
 import { cacheLife } from "next/cache";
 import { AppLink } from "@/components/app-link";
@@ -95,7 +94,7 @@ async function ProductList({ page, sort, gender, series, minPrice, maxPrice }: F
 
 	if (sort === "top-rated") {
 		const ratings = getProductRatings();
-		filtered.sort((a, b) => {
+		filtered.sort((a: { slug: string }, b: { slug: string }) => {
 			const rA = ratings.get(a.slug) ?? 0;
 			const rB = ratings.get(b.slug) ?? 0;
 			return rB - rA;
@@ -122,9 +121,17 @@ async function ProductList({ page, sort, gender, series, minPrice, maxPrice }: F
 	return (
 		<>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-				{pageProducts.map((product: APIProductsBrowseResult["data"][number]) => (
-					<ProductCard key={product.id} product={product} />
-				))}
+				{pageProducts.map(
+					(product: {
+						id: string;
+						name: string;
+						slug: string;
+						images: string[];
+						variants?: { id: string; price: string; images: string[] }[];
+					}) => (
+						<ProductCard key={product.id} product={product} />
+					),
+				)}
 			</div>
 
 			<ProductsPagination

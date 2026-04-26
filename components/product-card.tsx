@@ -1,4 +1,3 @@
-import type { APICollectionGetByIdResult, APIProductsBrowseResult } from "commerce-kit";
 import { AppMedia } from "@/lib/app-media";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
@@ -9,10 +8,15 @@ import { QuickAddButton } from "./quick-add-button";
 import { QuickViewTrigger } from "./quick-view-modal";
 import { WishlistButton } from "./wishlist-button";
 
-type BrowseProduct = APIProductsBrowseResult["data"][number];
-type CollectionProduct = APICollectionGetByIdResult["productCollections"][number]["product"];
+type ProductCardProduct = {
+	id: string;
+	name: string;
+	slug: string;
+	images: string[];
+	variants?: { id: string; price: string; images: string[]; attributes?: Record<string, string> }[];
+};
 
-export function ProductCard({ product }: { product: BrowseProduct | CollectionProduct }) {
+export function ProductCard({ product }: { product: ProductCardProduct }) {
 	const variants = "variants" in product ? product.variants : null;
 	const firstVariantPrice = variants?.[0] ? BigInt(variants[0].price) : null;
 	const { minPrice, maxPrice } =
