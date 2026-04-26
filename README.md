@@ -2,7 +2,7 @@
   <img src="public/logo.svg" height="128" alt="Sumud Scents">
 </p>
 
-<h1 align="center">Sumud Scents</h1>
+<h1 align="center">Sumud Scentss</h1>
 
 <p align="center">
   An e-commerce store for premium fragrances, built with Next.js and Stripe.
