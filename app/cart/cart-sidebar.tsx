@@ -4,15 +4,21 @@ import { ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/app/cart/cart-context";
 import { CartItem } from "@/app/cart/cart-item";
+import { PromoCodeSection } from "@/app/cart/promo-code-section";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
+import { calculateDiscount, type PromoCode } from "@/lib/promo-codes";
 
 export function CartSidebar() {
 	const { isOpen, closeCart, items, itemCount, subtotal } = useCart();
 	const [isCheckingOut, setIsCheckingOut] = useState(false);
+	const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
+
+	const discount = appliedPromo ? calculateDiscount(subtotal, appliedPromo) : 0n;
+	const total = subtotal - discount;
 
 	const handleCheckout = async () => {
 		try {
@@ -28,6 +34,8 @@ export function CartSidebar() {
 						price: item.productVariant.price,
 						quantity: item.quantity,
 						image: item.productVariant.images?.[0] || item.productVariant.product.images?.[0],
+						variantId: item.productVariant.id,
+						productSlug: item.productVariant.product.slug,
 					})),
 				}),
 			});
@@ -87,10 +95,21 @@ export function CartSidebar() {
 
 						<SheetFooter className="border-t border-border pt-4 mt-auto">
 							<div className="w-full space-y-4">
+								<PromoCodeSection onPromoApplied={setAppliedPromo} />
+								<div className="flex items-center justify-between text-sm text-muted-foreground">
+									<span>Subtotal</span>
+									<span>{formatMoney({ amount: subtotal, currency: CURRENCY, locale: LOCALE })}</span>
+								</div>
+								{discount > 0n && (
+									<div className="flex items-center justify-between text-sm text-green-600">
+										<span>Discount ({appliedPromo?.label})</span>
+										<span>-{formatMoney({ amount: discount, currency: CURRENCY, locale: LOCALE })}</span>
+									</div>
+								)}
 								<div className="flex items-center justify-between text-base">
-									<span className="font-medium">Subtotal</span>
+									<span className="font-medium">Total</span>
 									<span className="font-semibold">
-										{formatMoney({ amount: subtotal, currency: CURRENCY, locale: LOCALE })}
+										{formatMoney({ amount: total, currency: CURRENCY, locale: LOCALE })}
 									</span>
 								</div>
 								<p className="text-xs text-muted-foreground">Shipping and taxes calculated at checkout</p>

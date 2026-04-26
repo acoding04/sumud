@@ -1,47 +1,61 @@
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import { getCurrentUser } from "@/lib/auth";
 import { CURRENCY } from "@/lib/constants";
+import { getStripe } from "@/lib/stripe";
 
-// Initialize Stripe with the secret key from environment variables (fallback for build step)
-const stripe = new Stripe(
-	process.env.STRIPE_SECRET_KEY || "sk_test_dummy",
-	{
-		apiVersion: "2023-10-16" as any, // adjust according to the Stripe SDK version
-	}
-);
+type CartItem = {
+	name: string;
+	price: string;
+	quantity: number;
+	image?: string;
+	variantId?: string;
+	productSlug?: string;
+};
 
 export async function POST(req: Request) {
 	try {
-		const { items } = await req.json();
+		const { items } = (await req.json()) as { items: CartItem[] };
 
-		// Map your application's cart items to Stripe line items
-		const line_items = items.map((item: any) => {
-			// Create price data according to your item structure
-			return {
-				price_data: {
-					currency: CURRENCY.toLowerCase(),
-					product_data: {
-						name: item.name || "Product", // Replace with actual item details
-						// images: item.image ? [item.image] : [],
-					},
-					unit_amount: item.price, // Make sure this is the price in cents!
+		const lineItems = items.map((item) => ({
+			price_data: {
+				currency: CURRENCY.toLowerCase(),
+				product_data: {
+					name: item.name || "Product",
 				},
-				quantity: item.quantity || 1,
-			};
-		});
+				unit_amount: Number(item.price),
+			},
+			quantity: item.quantity || 1,
+		}));
 
 		const origin = req.headers.get("origin") || "http://localhost:3000";
 
-		const session = await stripe.checkout.sessions.create({
+		const user = await getCurrentUser();
+		const userId = user?.id ?? "guest";
+
+		const session = await getStripe().checkout.sessions.create({
 			payment_method_types: ["card"],
-			line_items,
+			line_items: lineItems,
 			mode: "payment",
+			shipping_address_collection: { allowed_countries: ["GB"] },
 			success_url: `${origin}/order/success/{CHECKOUT_SESSION_ID}`,
 			cancel_url: `${origin}/cart`,
+			metadata: {
+				userId,
+				cartItems: JSON.stringify(
+					items.map((item) => ({
+						name: item.name,
+						price: item.price,
+						quantity: item.quantity,
+						image: item.image ?? "",
+						variantId: item.variantId ?? "",
+						productSlug: item.productSlug ?? "",
+					})),
+				),
+			},
 		});
 
 		return NextResponse.json({ url: session.url });
-	} catch (error: any) {
-		return NextResponse.json({ error: error.message }, { status: 500 });
+	} catch {
+		return NextResponse.json({ error: "Failed to create checkout session" }, { status: 500 });
 	}
 }

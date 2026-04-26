@@ -1,5 +1,7 @@
 import { cacheLife } from "next/cache";
+import Image from "next/image";
 import { AppLink } from "@/components/app-link";
+import { FooterNewsletter } from "@/components/footer-newsletter";
 import { commerce } from "@/lib/commerce";
 
 async function FooterCollections() {
@@ -14,14 +16,14 @@ async function FooterCollections() {
 
 	return (
 		<div>
-			<h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d2ab5a] mb-6">Collections</h3>
-			<ul className="space-y-4">
+			<h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d2ab5a] mb-5">Collections</h3>
+			<ul className="space-y-3">
 				{collections.data.map((collection: any) => (
 					<li key={collection.id}>
 						<AppLink
 							prefetch={"eager"}
 							href={`/collection/${collection.slug}`}
-							className="text-sm font-light text-neutral-400 hover:text-white transition-colors"
+							className="text-sm font-light text-neutral-400 hover:text-[#d2ab5a] transition-colors"
 						>
 							{collection.name}
 						</AppLink>
@@ -44,14 +46,14 @@ async function FooterLegalPages() {
 
 	return (
 		<div>
-			<h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d2ab5a] mb-6">Legal</h3>
-			<ul className="space-y-4">
+			<h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d2ab5a] mb-5">Legal</h3>
+			<ul className="space-y-3">
 				{pages.data.map((page: any) => (
 					<li key={page.id}>
 						<AppLink
 							prefetch={"eager"}
 							href={`/legal${page.path}`}
-							className="text-sm font-light text-neutral-400 hover:text-white transition-colors"
+							className="text-sm font-light text-neutral-400 hover:text-[#d2ab5a] transition-colors"
 						>
 							{page.title}
 						</AppLink>
@@ -64,50 +66,123 @@ async function FooterLegalPages() {
 
 export function Footer() {
 	return (
-		<footer className="border-t border-neutral-900 bg-[#0a0a0a] pt-24 pb-12 text-white">
-			<div className="max-w-7xl mx-auto px-6 lg:px-8">
-				<div className="flex flex-col lg:flex-row justify-between items-start gap-16 mb-24">
-					{/* Brand Logo & Description */}
-					<div className="flex flex-col justify-start max-w-sm">
-						<AppLink prefetch={"eager"} href="/" className="text-4xl sm:text-5xl font-serif tracking-[0.3em] text-[#d2ab5a] font-light">
-							SUMUD
-						</AppLink>
-						<p className="mt-8 text-sm font-light text-neutral-400 leading-relaxed">
-							Steadfast Elegance, Bottled.<br />
-							Experience true luxury rooted in resilience.
+		<footer className="bg-black text-white">
+			{/* Newsletter band */}
+			<div className="border-t border-neutral-800 bg-[#0a0a0a]">
+				<div className="max-w-7xl mx-auto px-6 lg:px-8 py-14">
+					<div className="max-w-xl mx-auto text-center">
+						<h3 className="text-xs font-semibold uppercase tracking-[0.3em] text-[#d2ab5a] mb-3">
+							Stay in the Loop
+						</h3>
+						<p className="text-sm text-neutral-500 mb-6">
+							New drops, exclusive offers, and early access — straight to your inbox.
 						</p>
-					</div>
-
-					{/* Navigation Links */}
-					<div className="flex flex-wrap lg:flex-nowrap gap-16 lg:gap-24">
-						{/* Collections */}
-						<FooterCollections />
-
-						{/* Support */}
-						<div>
-							<h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d2ab5a] mb-6">Support</h3>
-							<ul className="space-y-4">
-								<li>
-									<AppLink
-										prefetch={"eager"}
-										href="/faq"
-										className="text-sm font-light text-neutral-400 hover:text-white transition-colors"
-									>
-										FAQ
-									</AppLink>
-								</li>
-							</ul>
-						</div>
-
-						{/* Legal */}
-						<FooterLegalPages />
+						<FooterNewsletter />
 					</div>
 				</div>
+			</div>
 
-				{/* Bottom bar / Copyright */}
-				<div className="pt-8 border-t border-neutral-900/80 flex flex-col md:flex-row justify-between items-center gap-4">
-					<p className="text-[10px] uppercase tracking-[0.2em] text-neutral-500 font-light">
-						&copy; {new Date().getFullYear()} SUMUD SCENTS. ALL RIGHTS RESERVED.
+			{/* Main footer */}
+			<div className="border-t border-neutral-800">
+				<div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+					<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8">
+						{/* Brand */}
+						<div className="lg:col-span-4">
+							<AppLink prefetch={"eager"} href="/" className="inline-block">
+								<Image
+									src="/images/sumud_dark.png"
+									alt="Sumud Scents"
+									width={320}
+									height={80}
+									className="h-20 w-auto"
+								/>
+							</AppLink>
+							<p className="mt-6 text-sm font-light text-neutral-500 leading-relaxed max-w-xs">
+								Resilience in every spray. Premium inspired-by fragrances that last from morning to night.
+							</p>
+						</div>
+
+						{/* Links */}
+						<div className="lg:col-span-8">
+							<div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+								<FooterCollections />
+
+								<div>
+									<h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d2ab5a] mb-5">
+										Support
+									</h3>
+									<ul className="space-y-3">
+										<li>
+											<AppLink
+												prefetch={"eager"}
+												href="/faq"
+												className="text-sm font-light text-neutral-400 hover:text-[#d2ab5a] transition-colors"
+											>
+												FAQ
+											</AppLink>
+										</li>
+										<li>
+											<AppLink
+												prefetch={"eager"}
+												href="/contact"
+												className="text-sm font-light text-neutral-400 hover:text-[#d2ab5a] transition-colors"
+											>
+												Contact
+											</AppLink>
+										</li>
+										<li>
+											<AppLink
+												prefetch={"eager"}
+												href="/shipping"
+												className="text-sm font-light text-neutral-400 hover:text-[#d2ab5a] transition-colors"
+											>
+												Shipping & Returns
+											</AppLink>
+										</li>
+									</ul>
+								</div>
+
+								<div>
+									<h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#d2ab5a] mb-5">
+										Company
+									</h3>
+									<ul className="space-y-3">
+										<li>
+											<AppLink
+												prefetch={"eager"}
+												href="/about"
+												className="text-sm font-light text-neutral-400 hover:text-[#d2ab5a] transition-colors"
+											>
+												About Us
+											</AppLink>
+										</li>
+										<li>
+											<AppLink
+												prefetch={"eager"}
+												href="/products"
+												className="text-sm font-light text-neutral-400 hover:text-[#d2ab5a] transition-colors"
+											>
+												All Products
+											</AppLink>
+										</li>
+									</ul>
+								</div>
+
+								<FooterLegalPages />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* Copyright */}
+			<div className="border-t border-neutral-800/60">
+				<div className="max-w-7xl mx-auto px-6 lg:px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+					<p className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-light">
+						&copy; {new Date().getFullYear()} Sumud Scents. All rights reserved.
+					</p>
+					<p className="text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-light">
+						Inspired-by fragrances — not affiliated with original brands
 					</p>
 				</div>
 			</div>

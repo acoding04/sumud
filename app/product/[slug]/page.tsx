@@ -5,11 +5,24 @@ import { AddToCartButton } from "@/app/product/[slug]/add-to-cart-button";
 import { MediaGallery } from "@/app/product/[slug]/media-gallery";
 import { ProductReviews } from "@/app/product/[slug]/product-reviews";
 import { RelatedProducts } from "@/app/product/[slug]/related-products";
+import { AppLink } from "@/components/app-link";
+import { RecentlyViewed } from "@/components/recently-viewed";
+import { SocialShare } from "@/components/social-share";
+import {
+	Breadcrumb,
+	BreadcrumbItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { WishlistButton } from "@/components/wishlist-button";
 import { commerce } from "@/lib/commerce";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { buildProductBreadcrumbJsonLd, buildProductJsonLd, JsonLdScript } from "@/lib/json-ld";
 import { formatMoney } from "@/lib/money";
 import { perfumes } from "@/lib/perfume-data";
+import { TrackView } from "./track-view";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
 	const { slug } = await params;
@@ -31,14 +44,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export default async function ProductPage(props: { params: Promise<{ slug: string }> }) {
-	"use cache";
-	cacheLife("minutes");
+	const { slug } = await props.params;
 
-	return <ProductDetails params={props.params} />;
+	return (
+		<>
+			<TrackView slug={slug} />
+			<ProductDetails slug={slug} />
+			<RecentlyViewed currentSlug={slug} />
+		</>
+	);
 }
 
-const ProductDetails = async ({ params }: { params: Promise<{ slug: string }> }) => {
-	const { slug } = await params;
+const ProductDetails = async ({ slug }: { slug: string }) => {
+	"use cache";
+	cacheLife("minutes");
 	const [product, reviews] = await Promise.all([
 		commerce.productGet({ idOrSlug: slug }),
 		commerce.productReviewsBrowse({ idOrSlug: slug }, { limit: 20 }),
@@ -81,6 +100,31 @@ const ProductDetails = async ({ params }: { params: Promise<{ slug: string }> })
 
 			{/* Light Hero Section */}
 			<section className="relative w-full bg-zinc-50 text-zinc-900 min-h-[60vh] lg:min-h-[70vh] flex flex-col justify-center items-center border-b border-zinc-200 pb-16 lg:pb-0 pt-24 lg:pt-0">
+				<div className="absolute top-6 left-0 right-0 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+					<Breadcrumb>
+						<BreadcrumbList>
+							<BreadcrumbItem>
+								<BreadcrumbLink asChild>
+									<AppLink prefetch="eager" href="/" className="text-zinc-500 hover:text-zinc-700">
+										Home
+									</AppLink>
+								</BreadcrumbLink>
+							</BreadcrumbItem>
+							<BreadcrumbSeparator className="text-zinc-400" />
+							<BreadcrumbItem>
+								<BreadcrumbLink asChild>
+									<AppLink prefetch="eager" href="/products" className="text-zinc-500 hover:text-zinc-700">
+										Products
+									</AppLink>
+								</BreadcrumbLink>
+							</BreadcrumbItem>
+							<BreadcrumbSeparator className="text-zinc-400" />
+							<BreadcrumbItem>
+								<BreadcrumbPage className="text-zinc-700">{product.name}</BreadcrumbPage>
+							</BreadcrumbItem>
+						</BreadcrumbList>
+					</Breadcrumb>
+				</div>
 				<div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24 grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
 					{/* Left Column: Image/Media Gallery */}
 					<div className="w-full">
@@ -103,6 +147,13 @@ const ProductDetails = async ({ params }: { params: Promise<{ slug: string }> })
 									{perfumeData.gender}
 								</div>
 							)}
+							{product.variants[0] && (
+								<WishlistButton
+									variantId={product.variants[0].id}
+									productName={product.name}
+									className="h-10 w-10 border border-zinc-200 bg-white"
+								/>
+							)}
 						</div>
 
 						<p className="text-lg lg:text-xl text-zinc-600 font-light leading-[1.65] mb-12">
@@ -122,6 +173,10 @@ const ProductDetails = async ({ params }: { params: Promise<{ slug: string }> })
 								volumePricingTiers={product.volumePricingTiers}
 							/>
 						</div>
+						<SocialShare
+							url={`${process.env.NEXT_PUBLIC_URL || "https://sumudscents.com"}/product/${product.slug}`}
+							title={`${product.name} — Sumud Scents`}
+						/>
 					</div>
 				</div>
 			</section>
@@ -197,7 +252,7 @@ const ProductDetails = async ({ params }: { params: Promise<{ slug: string }> })
 			<section className="bg-zinc-50 py-16 border-t border-zinc-100 dark:bg-zinc-950 dark:border-zinc-800">
 				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
 					<ProductReviews reviews={reviews} slug={slug} />
-					<RelatedProducts productId={product.id} categorySlug={product.category?.slug} />
+					<RelatedProducts productId={product.id} slug={slug} />
 				</div>
 			</section>
 		</main>

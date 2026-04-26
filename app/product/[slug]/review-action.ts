@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { commerce } from "@/lib/commerce";
 
 type ReviewState = {
@@ -42,7 +43,8 @@ export async function submitReview(_prev: ReviewState, formData: FormData): Prom
 			{ author: author.trim(), email, content: content.trim(), rating: ratingNum },
 		);
 
-		return { success: true, message: "Thanks for your review! It will appear once approved." };
+		revalidatePath(`/product/${slug}`);
+		return { success: true, message: "Thanks for your review!" };
 	} catch {
 		return { success: false, message: "", error: "Something went wrong. Please try again." };
 	}

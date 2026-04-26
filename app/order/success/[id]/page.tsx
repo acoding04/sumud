@@ -1,6 +1,5 @@
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Clock } from "lucide-react";
 import { cacheLife } from "next/cache";
-import { notFound } from "next/navigation";
 import { AppLink } from "@/components/app-link";
 import { Button } from "@/components/ui/button";
 import { AppMedia } from "@/lib/app-media";
@@ -8,6 +7,7 @@ import { commerce } from "@/lib/commerce";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
 import { getProductThumbnail } from "@/lib/utils";
+import { ClearCartOnMount } from "./clear-cart";
 
 export default async function OrderSuccessPage(props: { params: Promise<{ id: string }> }) {
 	"use cache";
@@ -18,10 +18,42 @@ export default async function OrderSuccessPage(props: { params: Promise<{ id: st
 
 const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
 	const { id } = await params;
-	const order = await commerce.orderGet({ id });
+
+	const order =
+		(await commerce.orderGetByStripeSession({ stripeSessionId: id })) ?? (await commerce.orderGet({ id }));
 
 	if (!order) {
-		notFound();
+		return (
+			<div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+				<ClearCartOnMount />
+				<div className="text-center mb-10">
+					<div className="flex justify-center mb-4">
+						<div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-100">
+							<Clock className="h-8 w-8 text-amber-600" />
+						</div>
+					</div>
+					<h1 className="text-3xl font-semibold tracking-tight">Your order is being processed</h1>
+					<p className="text-muted-foreground mt-2">
+						We&apos;re confirming your payment. This usually takes a few seconds.
+					</p>
+					<p className="text-sm text-muted-foreground mt-4">
+						Please refresh this page in a moment, or check your email for confirmation.
+					</p>
+				</div>
+				<div className="mt-8 text-center space-x-4">
+					<Button variant="outline" asChild>
+						<AppLink prefetch="eager" href={`/order/success/${id}`}>
+							Refresh
+						</AppLink>
+					</Button>
+					<Button asChild>
+						<AppLink prefetch="eager" href="/">
+							Continue Shopping
+						</AppLink>
+					</Button>
+				</div>
+			</div>
+		);
 	}
 
 	const lineItems = order.orderData.lineItems;
@@ -29,15 +61,20 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
 	const shipping = order.orderData.shipping;
 	const customer = order.orderData.customer;
 
-	const subtotal = lineItems.reduce((acc: any, item: any) => {
-		return acc + BigInt(item.productVariant.price) * BigInt(item.quantity);
-	}, BigInt(0));
+	const subtotal = lineItems.reduce(
+		(acc: bigint, item: { productVariant: { price: string }; quantity: number }) => {
+			return acc + BigInt(item.productVariant.price) * BigInt(item.quantity);
+		},
+		BigInt(0),
+	);
 
 	const shippingCost = shipping ? BigInt(shipping.price) : BigInt(0);
 	const total = subtotal + shippingCost;
 
 	return (
 		<div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+			<ClearCartOnMount />
+
 			{/* Success Header */}
 			<div className="text-center mb-10">
 				<div className="flex justify-center mb-4">
@@ -60,7 +97,7 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
 					<h2 className="font-medium">Order Items</h2>
 				</div>
 				<div className="divide-y divide-border">
-					{lineItems.map((item: any) => (
+					{lineItems.map((item: OrderLineItem) => (
 						<OrderItem key={item.id} item={item} />
 					))}
 				</div>

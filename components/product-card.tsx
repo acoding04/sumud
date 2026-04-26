@@ -4,7 +4,10 @@ import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
 import { isVideoUrl } from "@/lib/utils";
 import { AppLink } from "./app-link";
+import { CompareButton } from "./compare-button";
 import { QuickAddButton } from "./quick-add-button";
+import { QuickViewTrigger } from "./quick-view-modal";
+import { WishlistButton } from "./wishlist-button";
 
 type BrowseProduct = APIProductsBrowseResult["data"][number];
 type CollectionProduct = APICollectionGetByIdResult["productCollections"][number]["product"];
@@ -44,8 +47,36 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 	const singleVariant = variants?.length === 1 ? variants[0] : null;
 
 	return (
-		<AppLink prefetch={"eager"} href={`/product/${product.slug}`} className="group block transition-all duration-500 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)] rounded-2xl pb-4">
+		<AppLink
+			prefetch={"eager"}
+			href={`/product/${product.slug}`}
+			className="group block transition-all duration-500 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)] rounded-2xl pb-4"
+		>
 			<div className="relative aspect-square bg-secondary rounded-2xl overflow-hidden mb-6">
+				{variants?.[0] && (
+					<WishlistButton
+						variantId={variants[0].id}
+						productName={product.name}
+						className="absolute top-3 right-3 z-10 h-9 w-9 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all"
+					/>
+				)}
+				{variants && (
+					<QuickViewTrigger
+						product={{
+							id: product.id,
+							name: product.name,
+							slug: product.slug,
+							images: product.images ?? [],
+							variants: variants.map((v) => ({ id: v.id, price: v.price, images: v.images ?? [] })),
+						}}
+						className="absolute top-3 left-3 z-10 h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center text-zinc-600 hover:text-zinc-900 hover:bg-white opacity-0 sm:group-hover:opacity-100 transition-all"
+					/>
+				)}
+				<CompareButton
+					slug={product.slug}
+					productName={product.name}
+					className="absolute bottom-3 left-3 z-10 h-9 w-9 opacity-0 sm:group-hover:opacity-100 transition-all"
+				/>
 				{singleVariant && (
 					<div className="absolute inset-x-0 bottom-4 z-10 mx-auto w-[85%] opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
 						<QuickAddButton
@@ -101,7 +132,9 @@ export function ProductCard({ product }: { product: BrowseProduct | CollectionPr
 					))}
 			</div>
 			<div className="space-y-1.5 px-2">
-				<h3 className="text-[1.05rem] font-medium tracking-tight text-foreground leading-snug">{product.name}</h3>
+				<h3 className="text-[1.05rem] font-medium tracking-tight text-foreground leading-snug">
+					{product.name}
+				</h3>
 				<p className="text-base font-semibold text-muted-foreground">{priceDisplay}</p>
 			</div>
 		</AppLink>

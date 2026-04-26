@@ -13,23 +13,37 @@ export async function Navbar() {
 			<AppLink
 				prefetch={"eager"}
 				href="/"
-				className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+				className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
 			>
 				Home
 			</AppLink>
 			<AppLink
 				prefetch={"eager"}
 				href="/products"
-				className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+				className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
 			>
 				Products
+			</AppLink>
+			<AppLink
+				prefetch={"eager"}
+				href="/about"
+				className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
+			>
+				About
+			</AppLink>
+			<AppLink
+				prefetch={"eager"}
+				href="/faq"
+				className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
+			>
+				FAQ
 			</AppLink>
 			{collections.data.map((collection: any) => (
 				<AppLink
 					prefetch={"eager"}
 					key={collection.id}
 					href={`/collection/${collection.slug}`}
-					className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+					className="text-sm font-medium text-neutral-400 hover:text-white transition-colors"
 				>
 					{collection.name}
 				</AppLink>

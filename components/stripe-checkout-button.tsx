@@ -4,30 +4,41 @@ import { Loader2, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { try_ as safe } from "safe-try";
 
-interface CheckoutButtonProps {
-	priceId: string;
+type CheckoutButtonProps = {
+	name: string;
+	price: string;
+	quantity?: number;
+	image?: string;
+	variantId?: string;
+	productSlug?: string;
 	className?: string;
-}
+};
 
-export function StripeCheckoutButton({ priceId, className }: CheckoutButtonProps) {
+export function StripeCheckoutButton({
+	name,
+	price,
+	quantity = 1,
+	image,
+	variantId,
+	productSlug,
+	className,
+}: CheckoutButtonProps) {
 	const [loading, setLoading] = useState(false);
 
 	async function handleCheckout() {
 		setLoading(true);
 
-		// POST request to the existing /api/checkout route
 		const [error, response] = await safe(
 			fetch("/api/checkout", {
 				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ priceId }),
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					items: [{ name, price, quantity, image, variantId, productSlug }],
+				}),
 			}),
 		);
 
 		if (error || !response?.ok) {
-			console.error("Failed to initiate checkout", error);
 			setLoading(false);
 			return;
 		}
@@ -42,6 +53,7 @@ export function StripeCheckoutButton({ priceId, className }: CheckoutButtonProps
 
 	return (
 		<button
+			type="button"
 			onClick={handleCheckout}
 			disabled={loading}
 			className={`group relative flex items-center justify-center gap-2 overflow-hidden rounded-none border border-neutral-700 bg-black px-6 py-3 text-sm font-medium tracking-widest text-neutral-300 transition-all hover:border-neutral-500 hover:text-white disabled:opacity-50 ${className || ""}`}

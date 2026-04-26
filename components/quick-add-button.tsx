@@ -3,6 +3,7 @@
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import { ShoppingBag } from "lucide-react";
 import { useTransition } from "react";
+import { toast } from "sonner";
 import { addToCart } from "@/app/cart/actions";
 import { useCart } from "@/app/cart/cart-context";
 import { TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -44,6 +45,7 @@ export function QuickAddButton({ variantId, variantPrice, variantImages, product
 			});
 
 			await addToCart(variantId, 1);
+			toast.success(`${product.name} added to cart`);
 		});
 	};
 

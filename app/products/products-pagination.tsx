@@ -23,10 +23,22 @@ function getPageNumbers(currentPage: number, totalPages: number) {
 	}, []);
 }
 
-function buildUrl(page: number, sort?: string) {
+type PaginationFilters = {
+	sort?: string;
+	gender?: string;
+	series?: string;
+	minPrice?: string;
+	maxPrice?: string;
+};
+
+function buildUrl(page: number, filters: PaginationFilters) {
 	const params = new URLSearchParams();
 	if (page > 1) params.set("page", String(page));
-	if (sort) params.set("sort", sort);
+	if (filters.sort) params.set("sort", filters.sort);
+	if (filters.gender) params.set("gender", filters.gender);
+	if (filters.series) params.set("series", filters.series);
+	if (filters.minPrice) params.set("minPrice", filters.minPrice);
+	if (filters.maxPrice) params.set("maxPrice", filters.maxPrice);
 	const qs = params.size ? `?${params.toString()}` : "";
 	return `/products${qs}`;
 }
@@ -35,21 +47,25 @@ export function ProductsPagination({
 	currentPage,
 	totalPages,
 	sort,
+	gender,
+	series,
+	minPrice,
+	maxPrice,
 }: {
 	currentPage: number;
 	totalPages: number;
-	sort?: string;
-}) {
+} & PaginationFilters) {
 	if (totalPages <= 1) return null;
 
 	const pageNumbers = getPageNumbers(currentPage, totalPages);
+	const filters = { sort, gender, series, minPrice, maxPrice };
 
 	return (
 		<Pagination className="mt-12">
 			<PaginationContent>
 				{currentPage > 1 && (
 					<PaginationItem>
-						<PaginationPrevious href={buildUrl(currentPage - 1, sort)} />
+						<PaginationPrevious href={buildUrl(currentPage - 1, filters)} />
 					</PaginationItem>
 				)}
 				{pageNumbers.map((page, index) =>
@@ -59,7 +75,7 @@ export function ProductsPagination({
 						</PaginationItem>
 					) : (
 						<PaginationItem key={page}>
-							<PaginationLink href={buildUrl(page, sort)} isActive={page === currentPage}>
+							<PaginationLink href={buildUrl(page, filters)} isActive={page === currentPage}>
 								{page}
 							</PaginationLink>
 						</PaginationItem>
@@ -67,7 +83,7 @@ export function ProductsPagination({
 				)}
 				{currentPage < totalPages && (
 					<PaginationItem>
-						<PaginationNext href={buildUrl(currentPage + 1, sort)} />
+						<PaginationNext href={buildUrl(currentPage + 1, filters)} />
 					</PaginationItem>
 				)}
 			</PaginationContent>

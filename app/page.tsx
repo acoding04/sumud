@@ -1,31 +1,40 @@
 import { ArrowRight } from "lucide-react";
-import { StripeCheckoutButton } from "@/components/stripe-checkout-button";
 import Image from "next/image";
+import { StripeCheckoutButton } from "@/components/stripe-checkout-button";
 
 const FEATURED_SCENTS = [
 	{
-		id: "481",
-		name: "Kalimat 481",
+		name: "481 - Inspired by Arabian Oud Kalimat",
+		displayName: "Kalimat 481",
 		size: "50ml",
-		price: "£35.00",
+		price: "3500",
+		displayPrice: "£35.00",
 		description: "A deep, grounding signature fragrance.",
 		image: "/images/Kalimat481.png",
+		variantId: "v-481",
+		productSlug: "481-kalimat",
 	},
 	{
-		id: "482",
-		name: "Oud 482",
+		name: "482 - Inspired by Oud Mubakhar",
+		displayName: "Oud 482",
 		size: "50ml",
-		price: "£35.00",
+		price: "3500",
+		displayPrice: "£35.00",
 		description: "Rich oud layered with timeless warmth.",
 		image: "/images/Oud482.png",
+		variantId: "v-482",
+		productSlug: "482-oud-mubakhar",
 	},
 	{
-		id: "483",
-		name: "Baccarat 483",
+		name: "483 - Inspired by Baccarat Rouge 540",
+		displayName: "Baccarat 483",
 		size: "50ml",
-		price: "£35.00",
+		price: "3000",
+		displayPrice: "£30.00",
 		description: "Quiet elegance captured in heavy musk.",
 		image: "/images/baccarat483.png",
+		variantId: "v-483",
+		productSlug: "483-baccarat-rouge",
 	},
 ];
 
@@ -33,9 +42,9 @@ export default function Home() {
 	return (
 		<main className="min-h-screen selection:bg-neutral-800 selection:text-white">
 			{/* HERO SECTION (DARK MODE) */}
-			<section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-neutral-800/50 px-4 pt-16 sm:px-6 lg:px-8 bg-[#111111] text-neutral-200">
+			<section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden border-b border-neutral-800/50 px-4 pt-16 sm:px-6 lg:px-8 bg-[#1a1a1a] text-neutral-200">
 				<div className="absolute inset-0 z-0 pointer-events-none">
-					<div className="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neutral-800 via-[#111111] to-[#111111] opacity-40 transform-gpu" />
+					<div className="absolute left-1/2 top-1/2 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-neutral-800 via-[#1a1a1a] to-[#1a1a1a] opacity-40 transform-gpu" />
 				</div>
 
 				<div className="relative z-10 flex max-w-4xl flex-col items-center text-center">
@@ -45,9 +54,7 @@ export default function Home() {
 
 					<h1 className="font-serif mb-8 flex flex-col items-center justify-center font-light tracking-tight drop-shadow-2xl text-[#d2ab5a]">
 						<span className="text-6xl sm:text-7xl md:text-9xl">SUMUD</span>
-						<span className="text-3xl sm:text-4xl md:text-6xl tracking-[0.3em] mt-2 sm:mt-4 text-white">
-							SCENTS
-						</span>
+						<span className="text-3xl sm:text-4xl md:text-6xl tracking-[0.3em] mt-2 sm:mt-4">SCENTS</span>
 					</h1>
 
 					<p className="mb-12 max-w-xl text-lg font-light tracking-wide text-neutral-300 sm:text-2xl font-sans">
@@ -78,7 +85,7 @@ export default function Home() {
 					<div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3">
 						{FEATURED_SCENTS.map((scent) => (
 							<div
-								key={scent.id}
+								key={scent.variantId}
 								className="group flex flex-col bg-white rounded-lg overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_30px_-4px_rgba(0,0,0,0.1)] transition-all duration-500 hover:-translate-y-1"
 							>
 								{/* Image Container with Zoom */}
@@ -100,14 +107,16 @@ export default function Home() {
 								<div className="p-8 flex flex-col flex-1 bg-white">
 									<div className="flex items-start justify-between gap-4">
 										<div>
-											<h3 className="font-serif text-2xl font-medium text-neutral-900">{scent.name}</h3>
+											<h3 className="font-serif text-2xl font-medium text-neutral-900">
+												{scent.displayName}
+											</h3>
 											<p className="mt-2 text-sm text-neutral-500 font-sans leading-relaxed">
 												{scent.description}
 											</p>
 										</div>
 										<div className="text-right">
 											<p className="text-base font-semibold tracking-wider text-neutral-900 font-sans">
-												{scent.price}
+												{scent.displayPrice}
 											</p>
 											<p className="mt-1 text-xs text-neutral-400 tracking-widest uppercase font-sans">
 												{scent.size}
@@ -118,7 +127,11 @@ export default function Home() {
 									<div className="mt-8 mt-auto pt-4 border-t border-neutral-100">
 										<div className="*:bg-[#222] *:text-white *:rounded-sm *:transition-all hover:*:bg-[#111] *:shadow-[-0_2px_10px_rgba(0,0,0,0.1)]">
 											<StripeCheckoutButton
-												priceId={scent.id}
+												name={scent.name}
+												price={scent.price}
+												image={scent.image}
+												variantId={scent.variantId}
+												productSlug={scent.productSlug}
 												className="w-full text-sm tracking-widest font-medium uppercase py-3"
 											/>
 										</div>

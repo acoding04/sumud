@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
+import { toast } from "sonner";
 import { addToCart } from "@/app/cart/actions";
 import { useCart } from "@/app/cart/cart-context";
 import { QuantitySelector } from "@/app/product/[slug]/quantity-selector";
@@ -105,6 +106,7 @@ export function AddToCartButton({ variants, product, volumePricingTiers = [] }: 
 
 			await addToCart(selectedVariant.id, quantity);
 			setQuantity(1);
+			toast.success(`${product.name} added to cart`);
 		});
 	};
 
