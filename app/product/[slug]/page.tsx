@@ -99,8 +99,8 @@ const ProductDetails = async ({ slug }: { slug: string }) => {
 			<JsonLdScript data={buildProductBreadcrumbJsonLd(product)} />
 
 			{/* Light Hero Section */}
-			<section className="relative w-full bg-zinc-50 text-zinc-900 min-h-[60vh] lg:min-h-[70vh] flex flex-col justify-center items-center border-b border-zinc-200 pb-16 lg:pb-0 pt-24 lg:pt-0">
-				<div className="absolute top-6 left-0 right-0 z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+			<section className="w-full bg-zinc-50 text-zinc-900 border-b border-zinc-200">
+				<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
 					<Breadcrumb>
 						<BreadcrumbList>
 							<BreadcrumbItem>
@@ -125,7 +125,7 @@ const ProductDetails = async ({ slug }: { slug: string }) => {
 						</BreadcrumbList>
 					</Breadcrumb>
 				</div>
-				<div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24 grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
+				<div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-10 grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
 					{/* Left Column: Image/Media Gallery */}
 					<div className="w-full">
 						<MediaGallery images={allImages} productName={product.name} variants={product.variants} />
@@ -136,12 +136,15 @@ const ProductDetails = async ({ slug }: { slug: string }) => {
 						<span className="text-zinc-500 tracking-[0.25em] text-sm uppercase font-medium mb-4">
 							{perfumeData?.id ? `Nº ${perfumeData.id}` : product.category?.name || "Scents"}
 						</span>
-						<h1 className="text-5xl lg:text-7xl font-serif tracking-tight leading-tight text-zinc-900 mb-4">
+						<h1 className="text-3xl lg:text-5xl font-serif tracking-tight leading-tight text-zinc-900 mb-4">
 							{product.name}
 						</h1>
 
-						<div className="flex items-center justify-center lg:justify-start gap-4 mb-8 pt-2">
+						<div className="flex items-center justify-center lg:justify-start gap-4 mb-6 pt-1">
 							<div className="text-3xl font-light tracking-wide text-zinc-800">{priceDisplay}</div>
+							<div className="px-4 py-1.5 bg-zinc-100 text-zinc-800 text-xs font-semibold tracking-[0.2em] uppercase rounded-full border border-zinc-200">
+								100ML
+							</div>
 							{perfumeData?.gender && (
 								<div className="px-4 py-1.5 bg-zinc-100 text-zinc-800 text-xs font-semibold tracking-[0.2em] uppercase rounded-full border border-zinc-200">
 									{perfumeData.gender}
@@ -156,12 +159,12 @@ const ProductDetails = async ({ slug }: { slug: string }) => {
 							)}
 						</div>
 
-						<p className="text-lg lg:text-xl text-zinc-600 font-light leading-[1.65] mb-12">
-							{perfumeData?.scentProfile || product.summary}
+						<p className="text-lg text-zinc-500 font-light tracking-wide mb-6">
+							{perfumeData?.scentProfile}
 						</p>
 
-						{/* Add to Cart within the Right Hero Column to keep it easily accessible alongside Title! */}
-						<div className="bg-white border border-zinc-200 p-6 lg:p-8 rounded-2xl shadow-sm text-zinc-900 animate-fade-up transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+						{/* Add to Cart */}
+						<div className="bg-white border border-zinc-200 p-5 lg:p-6 rounded-2xl shadow-sm text-zinc-900 animate-fade-up transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-6">
 							<AddToCartButton
 								variants={product.variants}
 								product={{
@@ -173,6 +176,12 @@ const ProductDetails = async ({ slug }: { slug: string }) => {
 								volumePricingTiers={product.volumePricingTiers}
 							/>
 						</div>
+
+						{(perfumeData?.description || product.description) && (
+							<p className="text-base text-zinc-600 font-light leading-[1.8]">
+								{perfumeData?.description || product.description}
+							</p>
+						)}
 						<SocialShare
 							url={`${process.env.NEXT_PUBLIC_URL || "https://sumudscents.com"}/product/${product.slug}`}
 							title={`${product.name} — Sumud Scents`}

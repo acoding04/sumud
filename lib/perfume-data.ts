@@ -5,6 +5,8 @@ export const perfumes = [
 		name: "Kalimat",
 		gender: "Unisex",
 		scentProfile: "Sweet, Amber, Woody",
+		description:
+			"A rich, enveloping fragrance inspired by Arabian Oud Kalimat. Opens with sacred olibanum and aromatic basil, then settles into a lush vanilla heart before drying down to deep agarwood and warm amber. This is a scent that commands presence — bold enough for evenings, refined enough for any occasion. From our 48-Series, built to linger on clothes and in rooms for up to 48 hours.",
 		topNotes: ["Olibanum", "Basil"],
 		heartNotes: ["Vanilla"],
 		baseNotes: ["Agarwood (Oud)", "Amber"],
@@ -15,6 +17,8 @@ export const perfumes = [
 		name: "Oud Mubakhar",
 		gender: "Unisex",
 		scentProfile: "Smoky, Floral, Woody",
+		description:
+			"Inspired by the traditional art of oud fumigation, this fragrance captures the ritual of burning precious woods. Smoky floral and woody notes open the experience, while rose and saffron at the heart add an opulent, almost ceremonial quality. The base of amber and oud delivers an unforgettable trail. A 48-Series heavyweight designed to last and leave a lasting impression wherever you go.",
 		topNotes: ["Floral Notes", "Woody Notes"],
 		heartNotes: ["Rose", "Saffron"],
 		baseNotes: ["Amber", "Oud"],
@@ -25,6 +29,8 @@ export const perfumes = [
 		name: "Sauvage",
 		gender: "Male",
 		scentProfile: "Fresh Spicy, Amber, Citrus",
+		description:
+			"Inspired by Dior Sauvage, this is raw masculinity refined. Juicy Calabrian bergamot and sharp pepper create an energising opening that grabs attention instantly. The heart unfolds with Sichuan pepper, lavender, and earthy vetiver, while ambroxan and cedar in the base provide a magnetic, skin-hugging warmth. Part of our 24-Series — bold, grounded, and built to stay on the skin for a full 24 hours.",
 		topNotes: ["Calabrian Bergamot", "Pepper"],
 		heartNotes: ["Sichuan Pepper", "Lavender", "Geranium", "Vetiver", "Patchouli"],
 		baseNotes: ["Ambroxan", "Cedar", "Labdanum"],
@@ -35,6 +41,8 @@ export const perfumes = [
 		name: "Ana Abiadh",
 		gender: "Unisex",
 		scentProfile: "Sweet, Fruity, Musky",
+		description:
+			"Inspired by Lattafa Ana Abiyedh, this is clean luxury in a bottle. Bright orange and bergamot open with effortless freshness, giving way to a soft, creamy heart of ripe pear and vanilla. The dry-down of white musk and dry amber leaves a subtle, addictive trail on the skin. Part of our 12-Series — designed for daytime wear, carrying you through a 12-hour day with understated elegance.",
 		topNotes: ["Orange", "Bergamot"],
 		heartNotes: ["Pear", "Vanilla"],
 		baseNotes: ["Musk", "Dry Amber"],
@@ -45,6 +53,8 @@ export const perfumes = [
 		name: "One Million",
 		gender: "Male",
 		scentProfile: "Warm Spicy, Cinnamon, Leather",
+		description:
+			"Inspired by Paco Rabanne 1 Million, this is confidence bottled. A punchy opening of blood mandarin, grapefruit, and cool mint awakens the senses before a spicy, seductive heart of cinnamon and rose takes over. The base is pure indulgence — rich amber, supple leather, and deep Indian patchouli. A 24-Series signature scent that demands attention and lasts from morning to midnight.",
 		topNotes: ["Blood Mandarin", "Grapefruit", "Mint"],
 		heartNotes: ["Cinnamon", "Spicy Notes", "Rose"],
 		baseNotes: ["Amber", "Leather", "Woody Notes", "Indian Patchouli"],
@@ -55,6 +65,8 @@ export const perfumes = [
 		name: "Baccarat Rouge",
 		gender: "Unisex",
 		scentProfile: "Amber Floral, Woody, Sweet",
+		description:
+			"Inspired by Baccarat Rouge 540, this is quiet luxury at its finest. Saffron and jasmine create an ethereal, luminous opening that feels like light on warm skin. The heart of amberwood and ambergris has a crystalline sweetness that is instantly recognisable. Fir resin and cedar in the base provide depth without weight. A 48-Series fragrance that becomes your signature — the kind people ask about.",
 		topNotes: ["Saffron", "Jasmine"],
 		heartNotes: ["Amberwood", "Ambergris"],
 		baseNotes: ["Fir Resin", "Cedar"],
@@ -65,6 +77,8 @@ export const perfumes = [
 		name: "Paris Hill",
 		gender: "Female",
 		scentProfile: "Floral Fruity, Fresh",
+		description:
+			"Inspired by Paris Hilton, this is playful glamour in every spritz. A cocktail of melon, apple, and peach bursts open with juicy, carefree energy. The heart is a bouquet of freesia, mimosa, jasmine, lily-of-the-valley, and tuberose — feminine and radiant. Musk, ylang-ylang, and sandalwood in the base keep it soft and wearable all day. A 12-Series fragrance that's fresh, flirty, and perfect for everyday confidence.",
 		topNotes: ["Melon", "Apple", "Peach"],
 		heartNotes: ["Freesia", "Mimosa", "Jasmine", "Lily-of-the-Valley", "Tuberose"],
 		baseNotes: ["Musk", "Ylang-Ylang", "Sandalwood", "Oakmoss"],
@@ -75,6 +89,8 @@ export const perfumes = [
 		name: "Fantasy",
 		gender: "Female",
 		scentProfile: "Sweet, Fruity, Gourmand",
+		description:
+			"Inspired by Britney Spears Fantasy, this is pure indulgence. Exotic kiwi, red litchi, and quince create a vibrant, mouth-watering opening. The heart is deliciously playful — white chocolate, cupcake, orchid, and jasmine blend into something irresistible. A musk-and-woodsy base keeps it grounded and wearable. Part of our 12-Series, this gourmand gem is perfect for anyone who loves scents that get compliments.",
 		topNotes: ["Kiwi", "Red Litchi", "Quince"],
 		heartNotes: ["White Chocolate", "Cupcake", "Orchid", "Jasmine"],
 		baseNotes: ["Musk", "Woodsy Notes", "Orris Root"],
@@ -85,6 +101,8 @@ export const perfumes = [
 		name: "Inviktus",
 		gender: "Male",
 		scentProfile: "Citrus, Marine, Aromatic",
+		description:
+			"Inspired by Paco Rabanne Invictus, this is victory in a bottle. Crisp sea notes, zesty grapefruit, and mandarin orange hit you with an invigorating freshness. The heart brings bay leaf and jasmine for an aromatic, athletic edge. Ambergris, guaiac wood, and oakmoss anchor it with a clean, masculine depth. A 12-Series performer — perfect for the office, the gym, or anywhere you want to feel unstoppable.",
 		topNotes: ["Sea Notes", "Grapefruit", "Mandarin Orange"],
 		heartNotes: ["Bay Leaf", "Jasmine"],
 		baseNotes: ["Ambergris", "Guaiac Wood", "Oakmoss", "Patchouli"],
@@ -95,6 +113,8 @@ export const perfumes = [
 		name: "Terre Dermes",
 		gender: "Male",
 		scentProfile: "Woody Spicy, Earthy, Citrus",
+		description:
+			"Inspired by Terre d'Hermes, this fragrance captures the raw beauty of earth and sky. Bright orange and grapefruit create a sunlit opening, while the heart of pepper and pelargonium adds a mineral, almost stony warmth. The base is deeply rooted — vetiver, cedar, patchouli, and benzoin create a dry, earthy sophistication. A 24-Series scent for the man who moves with quiet intention and lets his trail speak for him.",
 		topNotes: ["Orange", "Grapefruit"],
 		heartNotes: ["Pepper", "Pelargonium (Geranium)"],
 		baseNotes: ["Vetiver", "Cedar", "Patchouli", "Benzoin"],

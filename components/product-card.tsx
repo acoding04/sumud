@@ -56,7 +56,7 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 			href={`/product/${product.slug}`}
 			className="group block transition-all duration-500 hover:shadow-[0_12px_40px_rgb(0,0,0,0.06)] rounded-2xl pb-4"
 		>
-			<div className="relative aspect-square bg-secondary rounded-2xl overflow-hidden mb-6">
+			<div className="relative aspect-square bg-white rounded-2xl overflow-hidden mb-6">
 				{variants?.[0] && (
 					<WishlistButton
 						variantId={variants[0].id}
@@ -99,7 +99,7 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 				{primaryImage &&
 					(isVideoUrl(primaryImage) ? (
 						<video
-							className={`absolute inset-0 w-full h-full object-cover transform transition-all duration-700 group-hover:scale-105 ${secondaryImage ? "group-hover:opacity-0" : ""}`}
+							className={`absolute inset-0 w-full h-full object-contain scale-75 transform transition-all duration-700 group-hover:scale-[0.82] ${secondaryImage ? "group-hover:opacity-0" : ""}`}
 							src={primaryImage}
 							muted
 							loop
@@ -112,13 +112,13 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 							alt={product.name}
 							fill
 							sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-							className={`object-cover transform transition-all duration-700 group-hover:scale-105 ${secondaryImage ? "group-hover:opacity-0" : ""}`}
+							className={`object-contain scale-75 transform transition-all duration-700 group-hover:scale-[0.82] ${secondaryImage ? "group-hover:opacity-0" : ""}`}
 						/>
 					))}
 				{secondaryImage &&
 					(isVideoUrl(secondaryImage) ? (
 						<video
-							className="absolute inset-0 w-full h-full object-cover transform transition-all duration-700 scale-100 opacity-0 group-hover:scale-105 group-hover:opacity-100"
+							className="absolute inset-0 w-full h-full object-contain scale-75 transform transition-all duration-700 opacity-0 group-hover:scale-[0.82] group-hover:opacity-100"
 							src={secondaryImage}
 							muted
 							loop
@@ -131,7 +131,7 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 							alt={`${product.name} - alternate view`}
 							fill
 							sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-							className="object-cover transform transition-all duration-700 scale-100 opacity-0 group-hover:scale-105 group-hover:opacity-100"
+							className="object-contain scale-75 transform transition-all duration-700 opacity-0 group-hover:scale-[0.82] group-hover:opacity-100"
 						/>
 					))}
 			</div>

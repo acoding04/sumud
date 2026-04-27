@@ -57,13 +57,6 @@ export default function LoginPage() {
 							Create one
 						</AppLink>
 					</p>
-
-					<div className="border-t border-border pt-4 mt-4">
-						<p className="text-xs text-muted-foreground text-center">
-							Demo account: <span className="font-mono">demo@sumud.com</span> /{" "}
-							<span className="font-mono">demo123</span>
-						</p>
-					</div>
 				</form>
 			</div>
 		</div>

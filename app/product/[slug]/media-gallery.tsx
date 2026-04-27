@@ -84,7 +84,7 @@ export function MediaGallery({ images, productName, variants }: MediaGalleryProp
 	if (displayImages.length === 0) {
 		return (
 			<div className="flex flex-col gap-4 lg:sticky lg:top-24 lg:self-start">
-				<div className="aspect-square bg-secondary rounded-2xl flex items-center justify-center">
+				<div className="aspect-square bg-white rounded-2xl flex items-center justify-center">
 					<p className="text-muted-foreground">No images available</p>
 				</div>
 			</div>
@@ -98,10 +98,10 @@ export function MediaGallery({ images, productName, variants }: MediaGalleryProp
 			className="flex flex-col gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:rounded-2xl lg:sticky lg:top-24 lg:self-start"
 		>
 			{/* Main Image */}
-			<div className="group relative aspect-square overflow-hidden rounded-2xl bg-secondary">
+			<div className="group relative aspect-square overflow-hidden rounded-2xl bg-white">
 				{isVideoUrl(displayImages[selectedIndex] ?? "") ? (
 					<video
-						className="absolute inset-0 w-full h-full object-cover"
+						className="absolute inset-0 w-full h-full object-contain scale-75"
 						src={displayImages[selectedIndex]}
 						muted
 						loop
@@ -116,7 +116,7 @@ export function MediaGallery({ images, productName, variants }: MediaGalleryProp
 						fill
 						sizes="(max-width: 1024px) 100vw, 50vw"
 						className={cn(
-							"object-cover transition-transform duration-500",
+							"object-contain scale-75 transition-transform duration-500",
 							isZoomed && "scale-150 cursor-zoom-out",
 						)}
 						onClick={() => setIsZoomed(!isZoomed)}
@@ -189,7 +189,7 @@ export function MediaGallery({ images, productName, variants }: MediaGalleryProp
 						>
 							{isVideoUrl(image) ? (
 								<video
-									className="absolute inset-0 w-full h-full object-cover"
+									className="absolute inset-0 w-full h-full object-contain"
 									src={image}
 									muted
 									playsInline
@@ -200,7 +200,7 @@ export function MediaGallery({ images, productName, variants }: MediaGalleryProp
 									alt={`${productName} thumbnail ${index + 1}`}
 									fill
 									sizes="80px"
-									className="object-cover"
+									className="object-contain"
 								/>
 							)}
 						</button>
