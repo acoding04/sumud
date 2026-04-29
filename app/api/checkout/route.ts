@@ -28,6 +28,14 @@ export async function POST(req: Request) {
 		}));
 
 		const origin = req.headers.get("origin") || "http://localhost:3000";
+		
+		let cancelUrl: URL;
+		try {
+			cancelUrl = new URL(req.headers.get("referer") || origin);
+		} catch {
+			cancelUrl = new URL(origin);
+		}
+		cancelUrl.searchParams.set("cart", "open");
 
 		const user = await getCurrentUser();
 		const userId = user?.id ?? "guest";
@@ -38,7 +46,7 @@ export async function POST(req: Request) {
 			mode: "payment",
 			shipping_address_collection: { allowed_countries: ["GB"] },
 			success_url: `${origin}/order/success/{CHECKOUT_SESSION_ID}`,
-			cancel_url: `${origin}/cart`,
+			cancel_url: cancelUrl.toString(),
 			metadata: {
 				userId,
 				cartItems: JSON.stringify(

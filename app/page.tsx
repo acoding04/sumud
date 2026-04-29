@@ -1,12 +1,12 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { StripeCheckoutButton } from "@/components/stripe-checkout-button";
+import Link from "next/link";
 
 const FEATURED_SCENTS = [
 	{
 		name: "481 - Inspired by Arabian Oud Kalimat",
 		displayName: "Kalimat 481",
-		size: "50ml",
+		size: "100ml",
 		price: "3500",
 		displayPrice: "£35.00",
 		description: "A deep, grounding signature fragrance.",
@@ -17,7 +17,7 @@ const FEATURED_SCENTS = [
 	{
 		name: "482 - Inspired by Oud Mubakhar",
 		displayName: "Oud 482",
-		size: "50ml",
+		size: "100ml",
 		price: "3500",
 		displayPrice: "£35.00",
 		description: "Rich oud layered with timeless warmth.",
@@ -28,7 +28,7 @@ const FEATURED_SCENTS = [
 	{
 		name: "483 - Inspired by Baccarat Rouge 540",
 		displayName: "Baccarat 483",
-		size: "50ml",
+		size: "100ml",
 		price: "3000",
 		displayPrice: "£30.00",
 		description: "Quiet elegance captured in heavy musk.",
@@ -126,14 +126,12 @@ export default function Home() {
 
 									<div className="mt-8 mt-auto pt-4 border-t border-neutral-100">
 										<div className="*:bg-[#222] *:text-white *:rounded-sm *:transition-all hover:*:bg-[#111] *:shadow-[-0_2px_10px_rgba(0,0,0,0.1)]">
-											<StripeCheckoutButton
-												name={scent.name}
-												price={scent.price}
-												image={scent.image}
-												variantId={scent.variantId}
-												productSlug={scent.productSlug}
-												className="w-full text-sm tracking-widest font-medium uppercase py-3"
-											/>
+											<Link
+												href={`/product/${scent.productSlug}`}
+												className="flex w-full items-center justify-center text-sm tracking-widest font-medium uppercase py-3 text-center"
+											>
+												Explore
+											</Link>
 										</div>
 									</div>
 								</div>

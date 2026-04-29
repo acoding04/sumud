@@ -1,7 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { createContext, useCallback, useContext, useMemo, useOptimistic, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useOptimistic, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export type CartLineItem = {
 	quantity: number;
@@ -75,6 +76,20 @@ type CartProviderProps = {
 
 export function CartProvider({ children, initialCart, initialCartId }: CartProviderProps) {
 	const [isOpen, setIsOpen] = useState(false);
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const pathname = usePathname();
+
+	useEffect(() => {
+		if (searchParams?.get("cart") === "open") {
+			setIsOpen(true);
+			// Clean up the URL params without triggering a full navigation
+			const newParams = new URLSearchParams(searchParams.toString());
+			newParams.delete("cart");
+			const newQs = newParams.toString();
+			router.replace(`${pathname}${newQs ? `?${newQs}` : ""}`, { scroll: false });
+		}
+	}, [searchParams, router, pathname]);
 
 	const [optimisticCart, dispatchCartAction] = useOptimistic(initialCart, (state, action: CartAction) => {
 		if (!state) {
