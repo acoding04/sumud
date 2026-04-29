@@ -37,6 +37,7 @@ export function CartSidebar() {
 						variantId: item.productVariant.id,
 						productSlug: item.productVariant.product.slug,
 					})),
+					promoCode: appliedPromo?.code ?? null,
 				}),
 			});
 

@@ -38,7 +38,12 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
                         const session = await getStripe().checkout.sessions.retrieve(id);
                         if (session.payment_status === "paid") {
                                 const cartItemsRaw = session.metadata?.cartItems;
-                                const cartItems: CartItemMeta[] = cartItemsRaw ? JSON.parse(cartItemsRaw) : [];
+                                let cartItems: CartItemMeta[] = [];
+                                try {
+                                        cartItems = cartItemsRaw ? JSON.parse(cartItemsRaw) : [];
+                                } catch {
+                                        console.error("Failed to parse cart items from Stripe metadata");
+                                }
 
                                 let lineItemCounter = 0;
                                 const lineItems = cartItems.map((item) => ({
@@ -95,14 +100,8 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
                                         },
                                 });
 
-                                if (order?.customer?.email) {
-                                        const totalAmount = order.lineItems.reduce((acc, curr) => acc + (Number(curr.productVariant.price) * curr.quantity), 0) + Number(order.shipping.price);
-                                        await sendOrderConfirmationEmail(
-                                                order.customer.email,
-                                                order.lookup,
-                                                totalAmount.toString(),
-                                                order.customer.name
-                                        );
+                                if (order?.orderData?.customer?.email) {
+                                        await sendOrderConfirmationEmail(order);
                                 }
                         }
                 } catch (e) {

@@ -12,7 +12,7 @@ type StoredReview = {
 	createdAt: string;
 };
 
-type StoredOrder = {
+export type StoredOrder = {
 	id: string;
 	lookup: string;
 	userId: string;
@@ -456,6 +456,18 @@ export const commerce = {
 		}
 
 		return { id: cartId };
+	},
+	cartSetQuantity: async (args: { cartId: string; variantId: string; quantity: number }) => {
+		const items = db.carts.get(args.cartId);
+		if (!items) return;
+		const idx = items.findIndex((i) => i.variantId === args.variantId);
+		if (args.quantity <= 0) {
+			if (idx !== -1) items.splice(idx, 1);
+		} else if (idx !== -1) {
+			items[idx].quantity = args.quantity;
+		} else {
+			items.push({ variantId: args.variantId, quantity: args.quantity });
+		}
 	},
 	collectionGet: async (args?: any) => null,
 	legalPageGet: async (args?: any) => null,

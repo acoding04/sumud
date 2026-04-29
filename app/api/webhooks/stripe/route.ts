@@ -44,7 +44,13 @@ export async function POST(req: Request) {
 		}
 
 		const cartItemsRaw = session.metadata?.cartItems;
-		const cartItems: CartItemMeta[] = cartItemsRaw ? JSON.parse(cartItemsRaw) : [];
+		let cartItems: CartItemMeta[] = [];
+		try {
+			cartItems = cartItemsRaw ? JSON.parse(cartItemsRaw) : [];
+		} catch {
+			console.error("Failed to parse cart items from Stripe metadata");
+			return NextResponse.json({ error: "Invalid cart metadata" }, { status: 400 });
+		}
 
 		let lineItemCounter = 0;
 		const lineItems = cartItems.map((item) => ({
@@ -85,7 +91,7 @@ export async function POST(req: Request) {
 
 		const userId = session.metadata?.userId ?? "guest";
 
-		await commerce.orderCreate({
+		const order = await commerce.orderCreate({
 			userId,
 			stripeSessionId: session.id,
 			customer: {
@@ -99,6 +105,10 @@ export async function POST(req: Request) {
 				price: session.shipping_cost ? String(session.shipping_cost.amount_total) : "0",
 			},
 		});
+
+		if (order?.orderData?.customer?.email) {
+			await sendOrderConfirmationEmail(order);
+		}
 	}
 
 	return NextResponse.json({ received: true });
