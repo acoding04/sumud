@@ -101,13 +101,23 @@ export async function POST(req: Request) {
 			lineItems,
 			shippingAddress,
 			shipping: {
-				name: session.shipping_cost ? "Standard" : "Free",
-				price: session.shipping_cost ? String(session.shipping_cost.amount_total) : "0",
+				name:
+					session.metadata?.shippingCost && session.metadata.shippingCost !== "0" ? "Standard" : "Free",
+				price: session.metadata?.shippingCost ?? "0",
 			},
 		});
 
 		if (order?.orderData?.customer?.email) {
-			await sendOrderConfirmationEmail(order);
+			const emailResult = await sendOrderConfirmationEmail(order);
+			if (!emailResult.success) {
+				console.error(
+					`[WEBHOOK] Order created but email failed for order #${order.lookup}: ${emailResult.error}`,
+				);
+			} else {
+				console.log(`[WEBHOOK] Order #${order.lookup} created with email sent (ID: ${emailResult.emailId})`);
+			}
+		} else {
+			console.warn(`[WEBHOOK] Order created but no email address available: ${order?.lookup}`);
 		}
 	}
 

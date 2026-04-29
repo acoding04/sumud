@@ -18,7 +18,9 @@ export function CartSidebar() {
 	const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
 
 	const discount = appliedPromo ? calculateDiscount(subtotal, appliedPromo) : 0n;
-	const total = subtotal - discount;
+	const shipping = appliedPromo?.type === "free_shipping" || subtotal - discount >= 5000n ? 0n : 395n;
+	const standardShipping = 395n;
+	const total = subtotal - discount + shipping;
 
 	const handleCheckout = async () => {
 		try {
@@ -107,13 +109,35 @@ export function CartSidebar() {
 										<span>-{formatMoney({ amount: discount, currency: CURRENCY, locale: LOCALE })}</span>
 									</div>
 								)}
+								{appliedPromo?.type === "free_shipping" && (
+									<div className="flex items-center justify-between text-sm text-green-600">
+										<span>Shipping promo ({appliedPromo.label})</span>
+										<span>Applied</span>
+									</div>
+								)}
+								<div className="flex items-center justify-between text-sm text-muted-foreground">
+									<span>Shipping</span>
+									<span className={shipping === 0n ? "flex items-center gap-2" : ""}>
+										{shipping === 0n ? (
+											<>
+												<span className="line-through text-muted-foreground">
+													{formatMoney({ amount: standardShipping, currency: CURRENCY, locale: LOCALE })}
+												</span>
+												<span className="font-medium text-foreground">
+													{formatMoney({ amount: 0n, currency: CURRENCY, locale: LOCALE })}
+												</span>
+											</>
+										) : (
+											formatMoney({ amount: shipping, currency: CURRENCY, locale: LOCALE })
+										)}
+									</span>
+								</div>
 								<div className="flex items-center justify-between text-base">
 									<span className="font-medium">Total</span>
 									<span className="font-semibold">
 										{formatMoney({ amount: total, currency: CURRENCY, locale: LOCALE })}
 									</span>
 								</div>
-								<p className="text-xs text-muted-foreground">Shipping and taxes calculated at checkout</p>
 								<Button
 									className="w-full h-12 text-base font-medium"
 									onClick={handleCheckout}

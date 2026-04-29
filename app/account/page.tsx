@@ -127,7 +127,11 @@ function OrderCard({
 		order.orderData.lineItems.reduce(
 			(sum, item) => sum + BigInt(item.productVariant.price) * BigInt(item.quantity),
 			BigInt(0),
-		) + BigInt(order.orderData.shipping.price);
+		);
+	const shippingCost = BigInt(order.orderData.shipping.price);
+	const standardShippingCost = 395n;
+	const isFreeShipping = shippingCost === 0n;
+	const finalTotal = total + shippingCost;
 
 	const itemCount = order.orderData.lineItems.reduce((sum, item) => sum + item.quantity, 0);
 	const firstImage =
@@ -164,8 +168,22 @@ function OrderCard({
 					· {itemCount} {itemCount === 1 ? "item" : "items"}
 				</p>
 			</div>
-			<div className="text-sm font-medium shrink-0">
-				{formatMoney({ amount: total, currency: CURRENCY, locale: LOCALE })}
+			<div className="text-sm font-medium shrink-0 text-right">
+				<div className="text-muted-foreground text-xs mb-1">
+					Shipping: {isFreeShipping ? (
+						<>
+							<span className="line-through">
+								{formatMoney({ amount: standardShippingCost, currency: CURRENCY, locale: LOCALE })}
+							</span>{" "}
+							<span className="text-foreground font-medium">
+								{formatMoney({ amount: 0n, currency: CURRENCY, locale: LOCALE })}
+							</span>
+						</>
+					) : (
+						formatMoney({ amount: shippingCost, currency: CURRENCY, locale: LOCALE })
+					)}
+				</div>
+				<div>{formatMoney({ amount: finalTotal, currency: CURRENCY, locale: LOCALE })}</div>
 			</div>
 		</div>
 	);

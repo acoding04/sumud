@@ -269,14 +269,6 @@ const db = globalForCommerce.__sumudCommerce;
 
 const PRODUCTS = [
 	{
-		id: "p-test",
-		slug: "test-product",
-		name: "Stripe Test Product",
-		description: "A test product for checking Stripe checkout. Note: Stripe has a minimum checkout amount of £0.30, so this item costs 30p.",
-		images: ["/images/sumud_dark.png"],
-		variants: [{ id: "v-test", price: "30", images: ["/images/sumud_dark.png"], attributes: {} }],
-	},
-	{
 		id: "p-121",
 		slug: "121-ana-abiyedh",
 		name: "121 - Inspired by Lattafa Ana Abiyedh",

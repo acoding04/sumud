@@ -121,6 +121,8 @@ function OrderDetailCard({
 		BigInt(0),
 	);
 	const shippingCost = BigInt(order.orderData.shipping.price);
+	const standardShippingCost = 395n;
+	const isFreeShipping = shippingCost === 0n;
 	const total = subtotal + shippingCost;
 
 	const statusColors: Record<string, string> = {
@@ -193,9 +195,14 @@ function OrderDetailCard({
 			<div className="bg-secondary/30 px-6 py-3 flex justify-between text-sm">
 				<span className="text-muted-foreground">
 					Shipping: {order.orderData.shipping.name} (
-					{shippingCost > BigInt(0)
-						? formatMoney({ amount: shippingCost, currency: CURRENCY, locale: LOCALE })
-						: "Free"}
+					{isFreeShipping ? (
+						<>
+							<span className="mr-2 text-muted-foreground line-through">{formatMoney({ amount: standardShippingCost, currency: CURRENCY, locale: LOCALE })}</span>
+							<span className="font-medium text-foreground">{formatMoney({ amount: BigInt(0), currency: CURRENCY, locale: LOCALE })}</span>
+						</>
+					) : (
+						formatMoney({ amount: shippingCost, currency: CURRENCY, locale: LOCALE })
+					)}
 					)
 				</span>
 				<span className="text-muted-foreground">

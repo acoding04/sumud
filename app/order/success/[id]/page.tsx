@@ -156,6 +156,8 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
 	);
 
 	const shippingCost = shipping ? BigInt(shipping.price) : BigInt(0);
+	const standardShippingCost = 395n;
+	const isFreeShipping = shippingCost === 0n;
 	const total = subtotal + shippingCost;
 
 	return (
@@ -198,7 +200,20 @@ const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => 
 					{shipping && (
 						<div className="flex items-center justify-between text-sm">
 							<span className="text-muted-foreground">Shipping ({shipping.name})</span>
-							<span>{formatMoney({ amount: shippingCost, currency: CURRENCY, locale: LOCALE })}</span>
+							<span className={isFreeShipping ? "flex items-center gap-2" : ""}>
+								{isFreeShipping ? (
+									<>
+										<span className="text-muted-foreground line-through">
+											{formatMoney({ amount: standardShippingCost, currency: CURRENCY, locale: LOCALE })}
+										</span>
+										<span className="font-medium text-foreground">
+											{formatMoney({ amount: BigInt(0), currency: CURRENCY, locale: LOCALE })}
+										</span>
+									</>
+								) : (
+									formatMoney({ amount: shippingCost, currency: CURRENCY, locale: LOCALE })
+								)}
+							</span>
 						</div>
 					)}
 					<div className="flex items-center justify-between font-semibold pt-2 border-t border-border">

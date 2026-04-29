@@ -20,6 +20,8 @@ function buildOrderConfirmationHtml(order: StoredOrder) {
 		0n,
 	);
 	const shippingCost = BigInt(shipping.price);
+	const standardShippingCost = 395n;
+	const isFreeShipping = shippingCost === 0n;
 	const total = subtotal + shippingCost;
 
 	const date = new Intl.DateTimeFormat(LOCALE, {
@@ -65,7 +67,7 @@ function buildOrderConfirmationHtml(order: StoredOrder) {
 <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border:1px solid #e5e5e5;">
 
 <tr><td style="background:#000000;padding:32px 40px;text-align:center;">
-<h1 style="margin:0;color:#ffffff;font-size:18px;letter-spacing:0.3em;font-weight:600;">SUMUD SCENTS</h1>
+<img src="https://sumudscents.com/images/sumud_dark.png" alt="Sumud Scents Logo" style="max-width:120px;height:auto;display:block;margin:0 auto;">
 </td></tr>
 
 <tr><td style="padding:32px 40px 16px;">
@@ -101,7 +103,9 @@ ${itemRows}
 </tr>
 <tr>
 <td style="padding:6px 0;font-size:14px;color:#555;">Shipping (${shipping.name})</td>
-<td align="right" style="padding:6px 0;font-size:14px;color:#555;">${formatPrice(shippingCost)}</td>
+<td align="right" style="padding:6px 0;font-size:14px;color:#555;">
+	${isFreeShipping ? `<span style="color:#999;text-decoration:line-through;margin-right:8px;">${formatPrice(standardShippingCost)}</span><span style="color:#1a1a1a;font-weight:700;">${formatPrice(0n)}</span>` : formatPrice(shippingCost)}
+</td>
 </tr>
 <tr style="border-top:2px solid #1a1a1a;">
 <td style="padding:12px 0;font-size:16px;font-weight:700;color:#1a1a1a;">Total</td>
@@ -118,7 +122,7 @@ ${itemRows}
 <tr><td style="padding:32px 40px;text-align:center;"> </td></tr>
 
 <tr><td style="background:#000;padding:24px 40px;text-align:center;">
-<p style="margin:0 0 8px;color:#999;font-size:12px;">Questions? Contact <a href="mailto:hello@sumudscents.com" style="color:#d2ab5a;">hello@sumudscents.com</a></p>
+<p style="margin:0 0 8px;color:#999;font-size:12px;">Questions? Contact <a href="mailto:sumudltd@gmail.com" style="color:#d2ab5a;">sumudltd@gmail.com</a></p>
 <p style="margin:0;color:#666;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;">&copy; ${new Date().getFullYear()} Sumud Scents. All rights reserved.</p>
 </td></tr>
 
@@ -133,15 +137,19 @@ export async function sendOrderConfirmationEmail(order: StoredOrder) {
 	const { customer } = order.orderData;
 
 	if (!resend) {
-		console.log(
-			`Email Mock (No RESEND_API_KEY set):\n  To: ${customer.email}\n  Subject: Order Confirmation #${order.lookup}\n  Items: ${order.orderData.lineItems.length}`,
+		console.warn(
+			`[EMAIL] Resend not initialized - RESEND_API_KEY is missing!\n  To: ${customer.email}\n  Subject: Order Confirmation #${order.lookup}`,
 		);
-		return;
+		return { success: false, error: "RESEND_API_KEY not configured" };
 	}
 
-	const [error] = await safe(
+	console.log(
+		`[EMAIL] Sending order confirmation to ${customer.email} (Order #${order.lookup})`,
+	);
+
+	const [error, result] = await safe(
 		resend.emails.send({
-			from: "Sumud Scents <orders@sumudscents.com>",
+			from: "Sumud Scents <orders@contact.sumudscents.com>",
 			to: customer.email,
 			subject: `Order Confirmation #${order.lookup}`,
 			html: buildOrderConfirmationHtml(order),
@@ -149,6 +157,36 @@ export async function sendOrderConfirmationEmail(order: StoredOrder) {
 	);
 
 	if (error) {
-		console.error("Failed to send confirmation email:", error);
+		console.error(`[EMAIL] Failed to send confirmation email for order #${order.lookup}:`, {
+			email: customer.email,
+			error: error instanceof Error ? error.message : String(error),
+		});
+		return { success: false, error };
 	}
+
+	if (!result) {
+		console.error(`[EMAIL] Empty response from Resend for order #${order.lookup}`);
+		return { success: false, error: "Empty response from Resend" };
+	}
+
+	// Check if Resend returned an error in the response body
+	if (result.error) {
+		console.error(`[EMAIL] Resend API error for order #${order.lookup}:`, {
+			email: customer.email,
+			statusCode: result.error.statusCode,
+			message: result.error.message,
+		});
+		return { success: false, error: result.error.message };
+	}
+
+	// Check if data is null or missing
+	if (!result.data?.id) {
+		console.error(`[EMAIL] Invalid Resend response (no email ID) for order #${order.lookup}:`, {
+			response: JSON.stringify(result, null, 2),
+		});
+		return { success: false, error: "No email ID in Resend response" };
+	}
+
+	console.log(`[EMAIL] Successfully sent confirmation email (Email ID: ${result.data.id})`);
+	return { success: true, emailId: result.data.id };
 }

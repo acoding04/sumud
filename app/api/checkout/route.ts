@@ -5,6 +5,10 @@ import { CURRENCY } from "@/lib/constants";
 import { calculateDiscount, validatePromoCode } from "@/lib/promo-codes";
 import { getStripe } from "@/lib/stripe";
 
+// Shipping constants (in minor units - pence)
+const SHIPPING_COST = 395; // £3.95
+const FREE_SHIPPING_THRESHOLD = 5000n; // £50.00
+
 type CartItem = {
 	name: string;
 	price: string;
@@ -62,6 +66,25 @@ export async function POST(req: Request) {
 				discountAmount = calculateDiscount(subtotal, validatedPromo);
 			}
 		}
+ 
+		// Calculate shipping for orders under £50
+		const subtotalAfterDiscount = subtotal - discountAmount;
+		const hasFreeShippingPromo = validatedPromo?.type === "free_shipping";
+		const shippingAmount = hasFreeShippingPromo || subtotalAfterDiscount >= FREE_SHIPPING_THRESHOLD ? 0n : BigInt(SHIPPING_COST);
+ 
+		// Add shipping line item if needed
+		if (shippingAmount > 0n) {
+			lineItems.push({
+				price_data: {
+					currency: CURRENCY.toLowerCase(),
+					product_data: {
+						name: "Standard Shipping",
+					},
+					unit_amount: Number(shippingAmount),
+				},
+				quantity: 1,
+			});
+		}
 
 		const origin = req.headers.get("origin") || "http://localhost:3000";
 
@@ -72,12 +95,12 @@ export async function POST(req: Request) {
 			cancelUrl = new URL(origin);
 		}
 		cancelUrl.searchParams.set("cart", "open");
-
+ 
 		const user = await getCurrentUser();
 		const userId = user?.id ?? "guest";
-
+ 
 		const stripe = getStripe();
-
+ 
 		let couponId: string | undefined;
 		if (discountAmount > 0n) {
 			const coupon = await stripe.coupons.create({
@@ -88,7 +111,7 @@ export async function POST(req: Request) {
 			});
 			couponId = coupon.id;
 		}
-
+ 
 		const session = await stripe.checkout.sessions.create({
 			payment_method_types: ["card"],
 			line_items: lineItems,
@@ -112,6 +135,10 @@ export async function POST(req: Request) {
 						productSlug: item.productSlug ?? "",
 					})),
 				),
+				shippingCost: String(shippingAmount),
+				...(validatedPromo?.type === "free_shipping" && {
+					shippingPromo: validatedPromo.code,
+				}),
 			},
 		});
 
