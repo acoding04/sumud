@@ -44,6 +44,7 @@ export async function POST(req: Request) {
 			payment_method_types: ["card"],
 			line_items: lineItems,
 			mode: "payment",
+			customer_email: user?.email ?? undefined,
 			shipping_address_collection: { allowed_countries: ["GB"] },
 			success_url: `${origin}/order/success/{CHECKOUT_SESSION_ID}`,
 			cancel_url: cancelUrl.toString(),

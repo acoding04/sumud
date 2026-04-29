@@ -7,6 +7,8 @@ import { commerce } from "@/lib/commerce";
 import { CURRENCY, LOCALE } from "@/lib/constants";
 import { formatMoney } from "@/lib/money";
 import { getProductThumbnail } from "@/lib/utils";
+import { getStripe } from "@/lib/stripe";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 import { ClearCartOnMount } from "./clear-cart";
 
 export default async function OrderSuccessPage(props: { params: Promise<{ id: string }> }) {
@@ -16,13 +18,99 @@ export default async function OrderSuccessPage(props: { params: Promise<{ id: st
 	return <OrderDetails params={props.params} />;
 }
 
+type CartItemMeta = {
+        name: string;
+        price: string;
+        quantity: number;
+        image: string;
+        variantId: string;
+        productSlug: string;
+};
+
 const OrderDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
-	const { id } = await params;
+        const { id } = await params;
 
-	const order =
-		(await commerce.orderGetByStripeSession({ stripeSessionId: id })) ?? (await commerce.orderGet({ id }));
+        let order =
+                (await commerce.orderGetByStripeSession({ stripeSessionId: id })) ?? (await commerce.orderGet({ id }));
 
-	if (!order) {
+        if (!order) {
+                try {
+                        const session = await getStripe().checkout.sessions.retrieve(id);
+                        if (session.payment_status === "paid") {
+                                const cartItemsRaw = session.metadata?.cartItems;
+                                const cartItems: CartItemMeta[] = cartItemsRaw ? JSON.parse(cartItemsRaw) : [];
+
+                                let lineItemCounter = 0;
+                                const lineItems = cartItems.map((item) => ({
+                                        id: `li-${++lineItemCounter}`,
+                                        quantity: item.quantity,
+                                        productVariant: {
+                                                id: item.variantId || "v-unknown",
+                                                price: item.price,
+                                                images: item.image ? [item.image] : [],
+                                                product: {
+                                                        id: item.variantId ? `p-${item.variantId.replace("v-", "")}` : "p-unknown",
+                                                        name: item.name,
+                                                        slug: item.productSlug || "unknown",
+                                                        images: item.image ? [item.image] : [],
+                                                },
+                                        },
+                                }));
+
+                                const shippingDetails = session.collected_information?.shipping_details;
+                                const shippingAddress = shippingDetails
+                                        ? {
+                                                        name: shippingDetails.name ?? "",
+                                                        line1: shippingDetails.address?.line1 ?? "",
+                                                        line2: shippingDetails.address?.line2 ?? undefined,
+                                                        city: shippingDetails.address?.city ?? "",
+                                                        state: shippingDetails.address?.state ?? "",
+                                                        postalCode: shippingDetails.address?.postal_code ?? "",
+                                                        country: shippingDetails.address?.country ?? "",
+                                          }
+                                        : {
+                                                        name: session.customer_details?.name ?? "",
+                                                        line1: "",
+                                                        city: "",
+                                                        state: "",
+                                                        postalCode: "",
+                                                        country: "GB",
+                                          };
+
+                                const userId = session.metadata?.userId ?? "guest";
+                                const email = session.customer_details?.email ?? "";
+
+                                order = await commerce.orderCreate({
+                                        userId,
+                                        stripeSessionId: session.id,
+                                        customer: {
+                                                email,
+                                                name: session.customer_details?.name ?? shippingAddress.name,
+                                        },
+                                        lineItems,
+                                        shippingAddress,
+                                        shipping: {
+                                                name: session.shipping_cost ? "Standard" : "Free",
+                                                price: session.shipping_cost ? String(session.shipping_cost.amount_total) : "0",
+                                        },
+                                });
+
+                                if (order?.customer?.email) {
+                                        const totalAmount = order.lineItems.reduce((acc, curr) => acc + (Number(curr.productVariant.price) * curr.quantity), 0) + Number(order.shipping.price);
+                                        await sendOrderConfirmationEmail(
+                                                order.customer.email,
+                                                order.lookup,
+                                                totalAmount.toString(),
+                                                order.customer.name
+                                        );
+                                }
+                        }
+                } catch (e) {
+                        console.error("Failed to retrieve Stripe session", e);
+                }
+        }
+
+        if (!order) {
 		return (
 			<div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				<ClearCartOnMount />

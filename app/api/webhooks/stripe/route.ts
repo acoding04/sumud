@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { commerce } from "@/lib/commerce";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 import { getStripe } from "@/lib/stripe";
 
 type CartItemMeta = {
