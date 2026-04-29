@@ -1,8 +1,8 @@
 "use client";
 
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { ReactNode } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useOptimistic, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export type CartLineItem = {
 	quantity: number;
@@ -89,7 +89,7 @@ export function CartProvider({ children, initialCart, initialCartId }: CartProvi
 			const newQs = newParams.toString();
 			router.replace(`${pathname}${newQs ? `?${newQs}` : ""}`, { scroll: false });
 		}
-	}, [searchParams, router, pathname]);
+	}, [searchParams, pathname]);
 
 	const [optimisticCart, dispatchCartAction] = useOptimistic(initialCart, (state, action: CartAction) => {
 		if (!state) {

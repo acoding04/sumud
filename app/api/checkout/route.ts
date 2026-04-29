@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 		}));
 
 		const origin = req.headers.get("origin") || "http://localhost:3000";
-		
+
 		let cancelUrl: URL;
 		try {
 			cancelUrl = new URL(req.headers.get("referer") || origin);

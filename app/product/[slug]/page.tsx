@@ -159,9 +159,7 @@ const ProductDetails = async ({ slug }: { slug: string }) => {
 							)}
 						</div>
 
-						<p className="text-lg text-zinc-500 font-light tracking-wide mb-6">
-							{perfumeData?.scentProfile}
-						</p>
+						<p className="text-lg text-zinc-500 font-light tracking-wide mb-6">{perfumeData?.scentProfile}</p>
 
 						{/* Add to Cart */}
 						<div className="bg-white border border-zinc-200 p-5 lg:p-6 rounded-2xl shadow-sm text-zinc-900 animate-fade-up transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] mb-6">

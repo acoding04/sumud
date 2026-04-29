@@ -74,10 +74,15 @@ export async function setCartQuantity(variantId: string, quantity: number) {
 			// Remove item
 			await commerce.cartUpsert({ cartId: cartCookie.id, variantId, quantity: 0 });
 		} else {
-			// cartUpsert treats quantity as additive, so remove first then re-add
-			// with the exact quantity we want
-			await commerce.cartUpsert({ cartId: cartCookie.id, variantId, quantity: 0 });
-			await commerce.cartUpsert({ cartId: cartCookie.id, variantId, quantity });
+			const currentCart = await commerce.cartGet({ cartId: cartCookie.id });
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const existingItem = currentCart?.lineItems?.find((item: any) => item.productVariant.id === variantId);
+			const existingQuantity = existingItem ? existingItem.quantity : 0;
+			const diff = quantity - existingQuantity;
+
+			if (diff !== 0) {
+				await commerce.cartUpsert({ cartId: cartCookie.id, variantId, quantity: diff });
+			}
 		}
 
 		// Fetch updated cart

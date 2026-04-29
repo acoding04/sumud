@@ -10,9 +10,7 @@ export function AnnouncementBar() {
 
 	return (
 		<div className="relative bg-black border-b border-[#d2ab5a]/20 text-[#d2ab5a] text-xs sm:text-sm text-center py-2 px-10">
-			<span className="font-medium tracking-wide">
-				Free UK shipping on orders over £50
-			</span>
+			<span className="font-medium tracking-wide">Free UK shipping on orders over £50</span>
 			<button
 				type="button"
 				onClick={() => setDismissed(true)}
