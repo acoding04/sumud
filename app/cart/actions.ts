@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { commerce } from "@/lib/commerce";
 import { getCartCookieJson, setCartCookie } from "@/lib/cookies";
 
@@ -35,6 +36,7 @@ export async function addToCart(variantId: string, quantity = 1) {
 	// Fetch full cart data to sync with client
 	const fullCart = await commerce.cartGet({ cartId: cart.id });
 
+	revalidatePath("/", "layout");
 	return { success: true, cart: fullCart };
 }
 
@@ -55,6 +57,7 @@ export async function removeFromCart(variantId: string) {
 
 		// Fetch updated cart
 		const cart = await commerce.cartGet({ cartId: cartCookie.id });
+		revalidatePath("/", "layout");
 		return { success: true, cart };
 	} catch {
 		return { success: false, cart: null };
@@ -74,19 +77,15 @@ export async function setCartQuantity(variantId: string, quantity: number) {
 			// Remove item
 			await commerce.cartUpsert({ cartId: cartCookie.id, variantId, quantity: 0 });
 		} else {
-			const currentCart = await commerce.cartGet({ cartId: cartCookie.id });
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			const existingItem = currentCart?.lineItems?.find((item: any) => item.productVariant.id === variantId);
-			const existingQuantity = existingItem ? existingItem.quantity : 0;
-			const diff = quantity - existingQuantity;
-
-			if (diff !== 0) {
-				await commerce.cartUpsert({ cartId: cartCookie.id, variantId, quantity: diff });
-			}
+			// cartUpsert treats quantity as additive, so remove first then re-add
+			// with the exact quantity we want
+			await commerce.cartUpsert({ cartId: cartCookie.id, variantId, quantity: 0 });
+			await commerce.cartUpsert({ cartId: cartCookie.id, variantId, quantity });
 		}
 
 		// Fetch updated cart
 		const cart = await commerce.cartGet({ cartId: cartCookie.id });
+		revalidatePath("/", "layout");
 		return { success: true, cart };
 	} catch {
 		return { success: false, cart: null };
