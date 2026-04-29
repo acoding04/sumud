@@ -1,3 +1,3 @@
 [build]
-  command = "npm install lightningcss-linux-x64-gnu && bun run build"
+  command = "rm -rf node_modules && npm install && bun run build"
   publish = ".next"
