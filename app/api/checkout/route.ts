@@ -136,9 +136,7 @@ export async function POST(req: Request) {
 					})),
 				),
 				shippingCost: String(shippingAmount),
-				...(hasFreeShippingPromo && {
-					shippingPromo: validatedPromo.code,
-				}),
+				...(hasFreeShippingPromo && validatedPromo ? { shippingPromo: validatedPromo.code } : {}),
 			},
 		});
 
