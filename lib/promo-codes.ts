@@ -11,7 +11,7 @@ const PROMO_CODES: PromoCode[] = [
 	{ code: "WELCOME5", type: "percentage", value: 5, label: "5% off" },
 	{ code: "FIVER", type: "fixed", value: 500, label: "£5 off" },
 	{ code: "FREESHIP", type: "free_shipping", value: 0, label: "Free shipping" },
-	{ code: "HALAQAH", type: "percentage", value: 25, label: "25% off + free shipping", freeShipping: true },
+	{ code: "HALAQAH", type: "percentage", value: 25, label: "25% off + collection", freeShipping: true },
 ];
 
 export function validatePromoCode(code: string) {
