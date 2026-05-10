@@ -5,5 +5,5 @@ export async function GET() {
 	const me = await meGetCached();
 	const faviconUrl = getStoreFaviconUrl(me.store.settings);
 
-	redirect(faviconUrl ?? "/logo.svg");
+	redirect(faviconUrl ?? "/images/sumud_dark.png");
 }

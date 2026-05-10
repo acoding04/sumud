@@ -10,6 +10,7 @@ export type CartLineItem = {
 		id: string;
 		price: string;
 		images: string[];
+		stock?: number;
 		product: {
 			id: string;
 			name: string;

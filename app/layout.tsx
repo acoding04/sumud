@@ -39,14 +39,13 @@ const playfair = Playfair_Display({
 export async function generateMetadata(): Promise<Metadata> {
 	const me = await meGetCached();
 	const storeName = me.store.settings?.storeName || "Sumud Scents";
-	const faviconUrl = getStoreFaviconUrl(me.store.settings) ?? "/logo.svg";
+	const faviconUrl = getStoreFaviconUrl(me.store.settings) ?? "/images/sumud_dark.png";
 
 	return {
 		title: storeName,
 		description: me.store.settings?.storeDescription || "Your next e-commerce store",
 		icons: {
 			icon: [
-				{ url: faviconUrl, sizes: "any", type: "image/svg+xml" },
 				{ url: faviconUrl, sizes: "192x192", type: "image/png" },
 			],
 			apple: [{ url: faviconUrl, sizes: "180x180" }],

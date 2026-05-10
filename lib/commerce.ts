@@ -3,6 +3,23 @@
 
 type StoredCartItem = { variantId: string; quantity: number };
 
+type ProductVariant = {
+	id: string;
+	price: string;
+	images: string[];
+	stock: number;
+	attributes: Record<string, string>;
+};
+
+type Product = {
+	id: string;
+	slug: string;
+	name: string;
+	description: string;
+	images: string[];
+	variants: ProductVariant[];
+};
+
 type StoredReview = {
 	id: string;
 	author: string;
@@ -275,7 +292,7 @@ const PRODUCTS = [
 		description:
 			"The 12-Series (The Daytime Performers) Clean, fresh, and sweet scents that carry you through a 12-hour day.",
 		images: ["/images/Abiyadh121.png"],
-		variants: [{ id: "v-121", price: "2500", images: ["/images/Abiyadh121.png"], attributes: {} }],
+		variants: [{ id: "v-121", price: "2500", images: ["/images/Abiyadh121.png"], stock: 7, attributes: {} }],
 	},
 	{
 		id: "p-122",
@@ -284,7 +301,7 @@ const PRODUCTS = [
 		description:
 			"The 12-Series (The Daytime Performers) Clean, fresh, and sweet scents that carry you through a 12-hour day.",
 		images: ["/images/Invictus122.png"],
-		variants: [{ id: "v-122", price: "2500", images: ["/images/Invictus122.png"], attributes: {} }],
+		variants: [{ id: "v-122", price: "2500", images: ["/images/Invictus122.png"], stock: 6, attributes: {} }],
 	},
 	{
 		id: "p-123",
@@ -293,7 +310,7 @@ const PRODUCTS = [
 		description:
 			"The 12-Series (The Daytime Performers) Clean, fresh, and sweet scents that carry you through a 12-hour day.",
 		images: ["/images/Fantasy123.png"],
-		variants: [{ id: "v-123", price: "2000", images: ["/images/Fantasy123.png"], attributes: {} }],
+		variants: [{ id: "v-123", price: "2000", images: ["/images/Fantasy123.png"], stock: 0, attributes: {} }],
 	},
 	{
 		id: "p-124",
@@ -302,7 +319,7 @@ const PRODUCTS = [
 		description:
 			"The 12-Series (The Daytime Performers) Clean, fresh, and sweet scents that carry you through a 12-hour day.",
 		images: ["/images/Paris124.png"],
-		variants: [{ id: "v-124", price: "2000", images: ["/images/Paris124.png"], attributes: {} }],
+		variants: [{ id: "v-124", price: "2000", images: ["/images/Paris124.png"], stock: 5, attributes: {} }],
 	},
 	{
 		id: "p-241",
@@ -311,7 +328,7 @@ const PRODUCTS = [
 		description:
 			"The 24-Series (The Unwavering Signatures) Bold, grounded woods and spices built to stay on the skin for a full 24 hours.",
 		images: ["/images/Sauvage241.png"],
-		variants: [{ id: "v-241", price: "3000", images: ["/images/Sauvage241.png"], attributes: {} }],
+		variants: [{ id: "v-241", price: "3000", images: ["/images/Sauvage241.png"], stock: 5, attributes: {} }],
 	},
 	{
 		id: "p-242",
@@ -320,7 +337,7 @@ const PRODUCTS = [
 		description:
 			"The 24-Series (The Unwavering Signatures) Bold, grounded woods and spices built to stay on the skin for a full 24 hours.",
 		images: ["/images/Million242.png"],
-		variants: [{ id: "v-242", price: "3000", images: ["/images/Million242.png"], attributes: {} }],
+		variants: [{ id: "v-242", price: "3000", images: ["/images/Million242.png"], stock: 4, attributes: {} }],
 	},
 	{
 		id: "p-243",
@@ -329,7 +346,7 @@ const PRODUCTS = [
 		description:
 			"The 24-Series (The Unwavering Signatures) Bold, grounded woods and spices built to stay on the skin for a full 24 hours.",
 		images: ["/images/terre243.png"],
-		variants: [{ id: "v-243", price: "3000", images: ["/images/terre243.png"], attributes: {} }],
+		variants: [{ id: "v-243", price: "3000", images: ["/images/terre243.png"], stock: 7, attributes: {} }],
 	},
 	{
 		id: "p-481",
@@ -338,7 +355,7 @@ const PRODUCTS = [
 		description:
 			"The 48-Series (The Immovable Heavyweights) Deep ouds and rich resins that cling to clothes and linger in a room for 48 hours.",
 		images: ["/images/Kalimat481.png"],
-		variants: [{ id: "v-481", price: "3500", images: ["/images/Kalimat481.png"], attributes: {} }],
+		variants: [{ id: "v-481", price: "3500", images: ["/images/Kalimat481.png"], stock: 3, attributes: {} }],
 	},
 	{
 		id: "p-482",
@@ -347,7 +364,7 @@ const PRODUCTS = [
 		description:
 			"The 48-Series (The Immovable Heavyweights) Deep ouds and rich resins that cling to clothes and linger in a room for 48 hours.",
 		images: ["/images/Oud482.png"],
-		variants: [{ id: "v-482", price: "3500", images: ["/images/Oud482.png"], attributes: {} }],
+		variants: [{ id: "v-482", price: "3500", images: ["/images/Oud482.png"], stock: 3, attributes: {} }],
 	},
 	{
 		id: "p-483",
@@ -356,9 +373,31 @@ const PRODUCTS = [
 		description:
 			"The 48-Series (The Immovable Heavyweights) Deep ouds and rich resins that cling to clothes and linger in a room for 48 hours.",
 		images: ["/images/baccarat483.png"],
-		variants: [{ id: "v-483", price: "3000", images: ["/images/baccarat483.png"], attributes: {} }],
+		variants: [{ id: "v-483", price: "3000", images: ["/images/baccarat483.png"], stock: 5, attributes: {} }],
 	},
 ];
+
+function getProductByVariantId(variantId: string) {
+	return PRODUCTS.find((product) => product.variants.some((variant) => variant.id === variantId));
+}
+
+function getVariantById(variantId: string) {
+	const product = getProductByVariantId(variantId);
+	return product?.variants.find((variant) => variant.id === variantId) ?? null;
+}
+
+function getAvailableStock(variantId: string) {
+	return getVariantById(variantId)?.stock ?? 0;
+}
+
+function decrementStockForLineItems(lineItems: StoredOrder["orderData"]["lineItems"]) {
+	for (const lineItem of lineItems) {
+		const product = getProductByVariantId(lineItem.productVariant.id);
+		const variant = product?.variants.find((currentVariant) => currentVariant.id === lineItem.productVariant.id);
+		if (!variant) continue;
+		variant.stock = Math.max(0, variant.stock - lineItem.quantity);
+	}
+}
 
 export const commerce = {
 	meGet: async () => ({
@@ -418,6 +457,7 @@ export const commerce = {
 							id: variant.id,
 							price: variant.price,
 							images: variant.images,
+							stock: variant.stock,
 							attributes: variant.attributes,
 							product: {
 								id: product.id,
@@ -437,13 +477,21 @@ export const commerce = {
 		const items = db.carts.get(cartId);
 
 		if (args?.variantId && items) {
+			const availableStock = getAvailableStock(args.variantId);
+			const requestedQuantity = args.quantity ?? 1;
 			const idx = items.findIndex((i) => i.variantId === args.variantId);
 			if (args.quantity === 0) {
 				if (idx !== -1) items.splice(idx, 1);
-			} else if (idx !== -1) {
-				items[idx].quantity += args.quantity ?? 1;
 			} else {
-				items.push({ variantId: args.variantId, quantity: args.quantity ?? 1 });
+				const currentQuantity = idx !== -1 ? items[idx].quantity : 0;
+				if (availableStock <= 0 || currentQuantity + requestedQuantity > availableStock) {
+					return { id: cartId, outOfStock: true };
+				}
+				if (idx !== -1) {
+					items[idx].quantity += requestedQuantity;
+				} else {
+					items.push({ variantId: args.variantId, quantity: requestedQuantity });
+				}
 			}
 		}
 
@@ -451,15 +499,19 @@ export const commerce = {
 	},
 	cartSetQuantity: async (args: { cartId: string; variantId: string; quantity: number }) => {
 		const items = db.carts.get(args.cartId);
-		if (!items) return;
+		if (!items) return { outOfStock: false };
+		const availableStock = getAvailableStock(args.variantId);
 		const idx = items.findIndex((i) => i.variantId === args.variantId);
 		if (args.quantity <= 0) {
 			if (idx !== -1) items.splice(idx, 1);
+		} else if (availableStock <= 0 || args.quantity > availableStock) {
+			return { outOfStock: true };
 		} else if (idx !== -1) {
 			items[idx].quantity = args.quantity;
 		} else {
 			items.push({ variantId: args.variantId, quantity: args.quantity });
 		}
+		return { outOfStock: false };
 	},
 	collectionGet: async (args?: any) => null,
 	legalPageGet: async (args?: any) => null,
@@ -482,6 +534,7 @@ export const commerce = {
 		shippingAddress: StoredOrder["orderData"]["shippingAddress"];
 		shipping: StoredOrder["orderData"]["shipping"];
 	}) => {
+		decrementStockForLineItems(args.lineItems);
 		const id = `ord-${++db.orderCounter}`;
 		const lookup = `SUMUD-${1000 + db.orderCounter}`;
 		const order: StoredOrder = {

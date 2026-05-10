@@ -13,7 +13,7 @@ type ProductCardProduct = {
 	name: string;
 	slug: string;
 	images: string[];
-	variants?: { id: string; price: string; images: string[]; attributes?: Record<string, string> }[];
+	variants?: { id: string; price: string; images: string[]; stock?: number; attributes?: Record<string, string> }[];
 };
 
 export function ProductCard({ product }: { product: ProductCardProduct }) {
@@ -49,6 +49,7 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 	const secondaryImage = allImages[1];
 
 	const singleVariant = variants?.length === 1 ? variants[0] : null;
+	const isSoldOut = singleVariant?.stock !== undefined && singleVariant.stock <= 0;
 
 	return (
 		<AppLink
@@ -71,7 +72,7 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 							name: product.name,
 							slug: product.slug,
 							images: product.images ?? [],
-							variants: variants.map((v) => ({ id: v.id, price: v.price, images: v.images ?? [] })),
+							variants: variants.map((v) => ({ id: v.id, price: v.price, images: v.images ?? [], stock: v.stock })),
 						}}
 						className="absolute top-3 left-3 z-10 h-9 w-9 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center text-zinc-600 hover:text-zinc-900 hover:bg-white opacity-0 sm:group-hover:opacity-100 transition-all"
 					/>
@@ -82,11 +83,13 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 					className="absolute bottom-3 left-3 z-10 h-9 w-9 opacity-0 sm:group-hover:opacity-100 transition-all"
 				/>
 				{singleVariant && (
+					!isSoldOut && (
 					<div className="absolute inset-x-0 bottom-4 z-10 mx-auto w-[85%] opacity-0 transform translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
 						<QuickAddButton
 							variantId={singleVariant.id}
 							variantPrice={singleVariant.price}
 							variantImages={singleVariant.images}
+							variantStock={singleVariant.stock}
 							product={{
 								id: product.id,
 								name: product.name,
@@ -95,6 +98,7 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 							}}
 						/>
 					</div>
+					)
 				)}
 				{primaryImage &&
 					(isVideoUrl(primaryImage) ? (
@@ -140,6 +144,7 @@ export function ProductCard({ product }: { product: ProductCardProduct }) {
 					{product.name}
 				</h3>
 				<p className="text-base font-semibold text-muted-foreground">{priceDisplay}</p>
+				{isSoldOut && <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">Out of stock</p>}
 			</div>
 		</AppLink>
 	);

@@ -27,7 +27,7 @@ export async function addToCart(variantId: string, quantity = 1) {
 		quantity,
 	});
 
-	if (!cart) {
+	if (!cart || (cart as { outOfStock?: boolean }).outOfStock) {
 		return { success: false, cart: null };
 	}
 
@@ -73,7 +73,12 @@ export async function setCartQuantity(variantId: string, quantity: number) {
 	}
 
 	try {
-		await commerce.cartSetQuantity({ cartId: cartCookie.id, variantId, quantity });
+		const result = await commerce.cartSetQuantity({ cartId: cartCookie.id, variantId, quantity });
+		if (result && (result as { outOfStock?: boolean }).outOfStock) {
+			const cart = await commerce.cartGet({ cartId: cartCookie.id });
+			revalidatePath("/", "layout");
+			return { success: false, cart };
+		}
 
 		const cart = await commerce.cartGet({ cartId: cartCookie.id });
 		revalidatePath("/", "layout");

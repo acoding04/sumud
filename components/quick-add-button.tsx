@@ -12,6 +12,7 @@ type QuickAddButtonProps = {
 	variantId: string;
 	variantPrice: string;
 	variantImages: string[];
+	variantStock?: number;
 	product: {
 		id: string;
 		name: string;
@@ -20,17 +21,28 @@ type QuickAddButtonProps = {
 	};
 };
 
-export function QuickAddButton({ variantId, variantPrice, variantImages, product }: QuickAddButtonProps) {
+export function QuickAddButton({ variantId, variantPrice, variantImages, variantStock, product }: QuickAddButtonProps) {
 	const [isPending, startTransition] = useTransition();
 	const { openCart, dispatch } = useCart();
+	const isOutOfStock = variantStock === 0;
 
 	const handleClick = (e: React.MouseEvent) => {
 		e.preventDefault();
 		e.stopPropagation();
 
-		openCart();
+		if (isOutOfStock) {
+			toast.error(`${product.name} is out of stock`);
+			return;
+		}
 
 		startTransition(async () => {
+			const result = await addToCart(variantId, 1);
+			if (!result.success) {
+				toast.error(`${product.name} is out of stock`);
+				return;
+			}
+
+			openCart();
 			dispatch({
 				type: "ADD_ITEM",
 				item: {
@@ -39,12 +51,11 @@ export function QuickAddButton({ variantId, variantPrice, variantImages, product
 						id: variantId,
 						price: variantPrice,
 						images: variantImages,
+						stock: variantStock,
 						product,
 					},
 				},
 			});
-
-			await addToCart(variantId, 1);
 			toast.success(`${product.name} added to cart`);
 		});
 	};
@@ -56,7 +67,7 @@ export function QuickAddButton({ variantId, variantPrice, variantImages, product
 					<button
 						type="button"
 						onClick={handleClick}
-						disabled={isPending}
+						disabled={isPending || isOutOfStock}
 						className="absolute bottom-3 left-3 z-10 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-background/80 backdrop-blur-sm transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100 hover:bg-background hover:scale-110 active:scale-95 disabled:opacity-50"
 						aria-label={`Add ${product.name} to cart`}
 					>

@@ -22,6 +22,7 @@ export function CartItem({ item }: CartItemProps) {
 
 	const { productVariant, quantity } = item;
 	const { product } = productVariant;
+	const isAtStockLimit = productVariant.stock !== undefined && quantity >= productVariant.stock;
 
 	const image = getProductThumbnail(productVariant.images) ?? getProductThumbnail(product.images);
 	const price = getLineItemUnitPrice(item);
@@ -37,8 +38,9 @@ export function CartItem({ item }: CartItemProps) {
 
 	const handleIncrement = () => {
 		startTransition(async () => {
+			const result = await setCartQuantity(productVariant.id, quantity + 1);
+			if (!result.success) return;
 			dispatch({ type: "INCREASE", variantId: productVariant.id });
-			await setCartQuantity(productVariant.id, quantity + 1);
 			router.refresh();
 		});
 	};
@@ -49,8 +51,9 @@ export function CartItem({ item }: CartItemProps) {
 			return;
 		}
 		startTransition(async () => {
+			const result = await setCartQuantity(productVariant.id, quantity - 1);
+			if (!result.success) return;
 			dispatch({ type: "DECREASE", variantId: productVariant.id });
-			await setCartQuantity(productVariant.id, quantity - 1);
 			router.refresh();
 		});
 	};
@@ -110,7 +113,7 @@ export function CartItem({ item }: CartItemProps) {
 						<button
 							type="button"
 							onClick={handleIncrement}
-							disabled={isPending}
+							disabled={isPending || isAtStockLimit}
 							className="shrink-0 flex h-7 w-7 items-center justify-center rounded-r-full hover:bg-secondary transition-colors disabled:pointer-events-none"
 							aria-label="Increase quantity"
 						>

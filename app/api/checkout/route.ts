@@ -69,7 +69,7 @@ export async function POST(req: Request) {
  
 		// Calculate shipping for orders under £50
 		const subtotalAfterDiscount = subtotal - discountAmount;
-		const hasFreeShippingPromo = validatedPromo?.type === "free_shipping";
+		const hasFreeShippingPromo = validatedPromo?.type === "free_shipping" || validatedPromo?.freeShipping;
 		const shippingAmount = hasFreeShippingPromo || subtotalAfterDiscount >= FREE_SHIPPING_THRESHOLD ? 0n : BigInt(SHIPPING_COST);
  
 		// Add shipping line item if needed
@@ -136,7 +136,7 @@ export async function POST(req: Request) {
 					})),
 				),
 				shippingCost: String(shippingAmount),
-				...(validatedPromo?.type === "free_shipping" && {
+				...(hasFreeShippingPromo && {
 					shippingPromo: validatedPromo.code,
 				}),
 			},

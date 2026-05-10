@@ -18,7 +18,7 @@ export function CartSidebar() {
 	const [appliedPromo, setAppliedPromo] = useState<PromoCode | null>(null);
 
 	const discount = appliedPromo ? calculateDiscount(subtotal, appliedPromo) : 0n;
-	const shipping = appliedPromo?.type === "free_shipping" || subtotal - discount >= 5000n ? 0n : 395n;
+	const shipping = appliedPromo?.type === "free_shipping" || appliedPromo?.freeShipping || subtotal - discount >= 5000n ? 0n : 395n;
 	const standardShipping = 395n;
 	const total = subtotal - discount + shipping;
 
@@ -109,7 +109,7 @@ export function CartSidebar() {
 										<span>-{formatMoney({ amount: discount, currency: CURRENCY, locale: LOCALE })}</span>
 									</div>
 								)}
-								{appliedPromo?.type === "free_shipping" && (
+								{(appliedPromo?.type === "free_shipping" || appliedPromo?.freeShipping) && (
 									<div className="flex items-center justify-between text-sm text-green-600">
 										<span>Shipping promo ({appliedPromo.label})</span>
 										<span>Applied</span>

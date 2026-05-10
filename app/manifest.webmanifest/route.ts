@@ -4,7 +4,7 @@ import { getStoreFaviconUrl, meGetCached } from "@/lib/commerce";
 export async function GET() {
 	const me = await meGetCached();
 	const storeName = me.store.settings?.storeName || "Sumud Scents";
-	const faviconUrl = getStoreFaviconUrl(me.store.settings) ?? "/logo.svg";
+	const faviconUrl = getStoreFaviconUrl(me.store.settings) ?? "/images/sumud_dark.png";
 
 	const manifest = {
 		name: storeName,

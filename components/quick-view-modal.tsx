@@ -18,7 +18,7 @@ type QuickViewProduct = {
 	name: string;
 	slug: string;
 	images: string[];
-	variants: { id: string; price: string; images: string[] }[];
+	variants: { id: string; price: string; images: string[]; stock?: number }[];
 };
 
 export function QuickViewTrigger({ product, className }: { product: QuickViewProduct; className?: string }) {
@@ -28,6 +28,7 @@ export function QuickViewTrigger({ product, className }: { product: QuickViewPro
 
 	const perfumeData = perfumes.find((p) => p.slug === product.slug);
 	const variant = product.variants[0];
+	const isOutOfStock = variant?.stock === 0;
 	const price = variant
 		? formatMoney({ amount: BigInt(variant.price), currency: CURRENCY, locale: LOCALE })
 		: null;
@@ -36,7 +37,18 @@ export function QuickViewTrigger({ product, className }: { product: QuickViewPro
 
 	const handleAddToCart = () => {
 		if (!variant) return;
+		if (isOutOfStock) {
+			toast.error(`${product.name} is out of stock`);
+			return;
+		}
+
 		startTransition(async () => {
+			const result = await addToCart(variant.id, 1);
+			if (!result.success) {
+				toast.error(`${product.name} is out of stock`);
+				return;
+			}
+
 			dispatch({
 				type: "ADD_ITEM",
 				item: {
@@ -45,6 +57,7 @@ export function QuickViewTrigger({ product, className }: { product: QuickViewPro
 						id: variant.id,
 						price: variant.price,
 						images: variant.images,
+						stock: variant.stock,
 						product: {
 							id: product.id,
 							name: product.name,
@@ -54,7 +67,6 @@ export function QuickViewTrigger({ product, className }: { product: QuickViewPro
 					},
 				},
 			});
-			await addToCart(variant.id, 1);
 			toast.success(`${product.name} added to cart`);
 			setOpen(false);
 		});
@@ -117,9 +129,9 @@ export function QuickViewTrigger({ product, className }: { product: QuickViewPro
 							)}
 							<div className="mt-auto space-y-3">
 								{isSingleVariant && variant && (
-									<Button onClick={handleAddToCart} disabled={isPending} className="w-full gap-2">
+									<Button onClick={handleAddToCart} disabled={isPending || isOutOfStock} className="w-full gap-2">
 										<ShoppingBag className="h-4 w-4" />
-										{isPending ? "Adding..." : "Add to Cart"}
+										{isPending ? "Adding..." : isOutOfStock ? "Out of stock" : "Add to Cart"}
 									</Button>
 								)}
 								<AppLink

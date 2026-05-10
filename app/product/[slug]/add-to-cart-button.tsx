@@ -16,6 +16,7 @@ type Variant = {
 	id: string;
 	price: string;
 	images: string[];
+	stock?: number;
 	combinations: {
 		variantValue: {
 			id: string;
@@ -73,24 +74,32 @@ export function AddToCartButton({ variants, product, volumePricingTiers = [] }: 
 
 	const unitPrice = volumePrice ?? selectedVariant?.price;
 	const totalPrice = unitPrice ? BigInt(unitPrice) * BigInt(quantity) : null;
+	const maxQuantity = selectedVariant?.stock && selectedVariant.stock > 0 ? selectedVariant.stock : 99;
+	const isOutOfStock = selectedVariant?.stock === 0;
 
 	const buttonText = useMemo(() => {
 		if (isPending) return "Adding...";
+		if (isOutOfStock) return "Out of stock";
 		if (!selectedVariant) return "Select options";
 		if (totalPrice) {
 			return `Add to Cart — ${formatMoney({ amount: totalPrice, currency: CURRENCY, locale: LOCALE })}`;
 		}
 		return "Add to Cart";
-	}, [isPending, selectedVariant, totalPrice]);
+	}, [isPending, isOutOfStock, selectedVariant, totalPrice]);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 
-		if (!selectedVariant) return;
-
-		openCart();
+		if (!selectedVariant || isOutOfStock) return;
 
 		startTransition(async () => {
+			const result = await addToCart(selectedVariant.id, quantity);
+			if (!result.success) {
+				toast.error(`${product.name} is out of stock`);
+				return;
+			}
+
+			openCart();
 			dispatch({
 				type: "ADD_ITEM",
 				item: {
@@ -99,12 +108,11 @@ export function AddToCartButton({ variants, product, volumePricingTiers = [] }: 
 						id: selectedVariant.id,
 						price: selectedVariant.price,
 						images: selectedVariant.images,
+						stock: selectedVariant.stock,
 						product,
 					},
 				},
 			});
-
-			await addToCart(selectedVariant.id, quantity);
 			setQuantity(1);
 			toast.success(`${product.name} added to cart`);
 		});
@@ -114,14 +122,14 @@ export function AddToCartButton({ variants, product, volumePricingTiers = [] }: 
 		<div className="space-y-8">
 			{variants.length > 1 && <VariantSelector variants={variants} selectedVariantId={selectedVariant?.id} />}
 
-			<QuantitySelector quantity={quantity} onQuantityChange={setQuantity} disabled={isPending} />
+			<QuantitySelector quantity={quantity} onQuantityChange={setQuantity} max={maxQuantity} disabled={isPending || isOutOfStock} />
 
 			<VolumePricingDisplay tiers={resolvedTiers} quantity={quantity} volumePrice={volumePrice} />
 
 			<form onSubmit={handleSubmit}>
 				<button
 					type="submit"
-					disabled={isPending || !selectedVariant}
+					disabled={isPending || !selectedVariant || isOutOfStock}
 					className="w-full h-14 bg-foreground text-primary-foreground py-4 px-8 rounded-full text-base font-medium tracking-wide hover:bg-foreground/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 				>
 					{buttonText}
